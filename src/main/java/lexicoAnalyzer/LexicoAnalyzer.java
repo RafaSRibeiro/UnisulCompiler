@@ -37,7 +37,7 @@ public class LexicoAnalyzer {
 
                     if (isIgnoredChar(currentChar)) {
 
-                        if (currentChar == '\n'){
+                        if (isNewLine(currentChar)) {
                             row++;
                             column = 1;
                         }
@@ -48,32 +48,16 @@ public class LexicoAnalyzer {
                         state = 1;
                     } else if (isNumber(currentChar)) {
                         state = 2;
-                        // Quando a entrada � "
-                    } else if (currentChar == '"') {
-
+                    } else if (isDoubleQuotes(currentChar)) {
                         state = 3;
-
-                        // Quando a entrada � : ou >
                     } else if (currentChar == ':' || currentChar == '>') {
-
                         state = 5;
-
-                        // Quando a entrada � <
                     } else if (currentChar == '<') {
-
                         state = 6;
-
-                        // Quando a entrada � (
                     } else if (currentChar == '(') {
-
                         state = 7;
-
-                        // Quando a entrada � . ou , ou ; ou ) ou * ou / ou + ou - ou = ou $
                     } else if (".,;)*/+-=$".indexOf(currentChar) != -1) {
-
                         state = 11;
-
-                        // Quando a entrada � um caracter que n�o est� na gram�tica
                     } else {
                         showError(String.format("Símbolo '" + currentChar + "' não reconhecido. Linha: " + row + ". Coluna: " + column + "."));
                     }
@@ -123,7 +107,7 @@ public class LexicoAnalyzer {
 
                 case 3:
 
-                    if (currentChar == '"') {
+                    if (isDoubleQuotes(currentChar)) {
                         state = 4;
                     }
                     buffer.append(currentChar);
@@ -133,11 +117,11 @@ public class LexicoAnalyzer {
                 case 4:
 
                     String string = buffer.toString();
-                    if (string.length() <= 255){
+                    if (string.length() <= 255) {
                         symbols.add(new Symbol(21, string, "Literal"));
                         resetBuffer();
                     } else {
-                        showError(String.format("Literal com " + string.length() + " caracteres. Tamanho m�ximo permitido � 255 caracteres. Linha: " + row + ". Coluna: " + column + "."));
+                        showError(String.format("Literal com " + string.length() + " caracteres. Tamanho máximo permitido é 255 caracteres. Linha: " + row + ". Coluna: " + column + "."));
                     }
                     break;
 
@@ -232,5 +216,13 @@ public class LexicoAnalyzer {
 
     private boolean isNumber(char character) {
         return numbers.contains(String.valueOf(character));
+    }
+
+    private boolean isDoubleQuotes(char character) {
+        return character == '"';
+    }
+
+    private boolean isNewLine(char character) {
+        return character == '\n';
     }
 }
