@@ -1,4 +1,7 @@
-package lexicoAnalyzer;
+package program;
+
+import lexicoAnalyzer.LexicoAnalyzer;
+import lexicoAnalyzer.Symbol;
 
 import java.awt.Container;
 import java.awt.Font;
@@ -20,12 +23,13 @@ public class Main extends JFrame {
     private static DefaultTableModel model;
 
     private static JTable table;
-    private TextArea textEntrada;
+    private TextArea textArea;
     private JScrollPane scrollPane;
 
     public Main() {
         setTitle("Lexic Analizer");
-        setResizable(false);
+        setResizable(true);
+        this.setExtendedState( this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
         this.setLocation(((Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 320) - (this.getWidth() / 2)),
                 ((Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 280) - (this.getHeight() / 2)));
         model = new DefaultTableModel();
@@ -35,26 +39,26 @@ public class Main extends JFrame {
 
         table = new JTable(model);
 
-        Container container = getContentPane();
-        getContentPane().setLayout(null);
-        scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(344, 32, 440, 336);
-        container.add(scrollPane);
-
         JLabel labelEntrada = new JLabel("Input:");
         labelEntrada.setFont(new Font("Arial Black", Font.BOLD, 14));
         labelEntrada.setBounds(10, 10, 73, 14);
         getContentPane().add(labelEntrada);
 
-        textEntrada = new TextArea();
-        textEntrada.setBounds(10, 33, 328, 393);
-        getContentPane().add(textEntrada);
+        textArea = new TextArea();
+        textArea.setBounds(10, 33, 500, 500);
+        getContentPane().add(textArea);
+
+        Container container = getContentPane();
+        getContentPane().setLayout(null);
+        scrollPane = new JScrollPane(table);
+        scrollPane.setBounds(textArea.getWidth() + 50, 32, 500, 500);
+        container.add(scrollPane);
 
         JButton buttonAnalisar = new JButton("Analize");
         buttonAnalisar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                String entrada = textEntrada.getText() + " ";
+                String entrada = textArea.getText() + " ";
                 LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
 
                 try {
@@ -67,7 +71,7 @@ public class Main extends JFrame {
             }
         });
         buttonAnalisar.setFont(new Font("Arial Black", Font.BOLD, 14));
-        buttonAnalisar.setBounds(344, 379, 215, 47);
+        buttonAnalisar.setBounds(550, 550, 215, 47);
         getContentPane().add(buttonAnalisar);
 
         JButton buttonLimpar = new JButton("Clean");
@@ -77,7 +81,7 @@ public class Main extends JFrame {
             }
         });
         buttonLimpar.setFont(new Font("Arial Black", Font.BOLD, 14));
-        buttonLimpar.setBounds(569, 379, 215, 47);
+        buttonLimpar.setBounds(800, 550, 215, 47);
         getContentPane().add(buttonLimpar);
 
         JLabel labelResultado = new JLabel("Result:");

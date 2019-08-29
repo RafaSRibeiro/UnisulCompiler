@@ -1,5 +1,7 @@
 package lexicoAnalyzer;
 
+import program.Main;
+
 import java.util.ArrayList;
 import java.util.List;
 
