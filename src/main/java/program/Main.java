@@ -2,6 +2,7 @@ package program;
 
 import lexicoAnalyzer.LexicoAnalyzer;
 import lexicoAnalyzer.Symbol;
+import syntacticAnalyzer.SyntacticAnalyzer;
 
 import java.awt.Container;
 import java.awt.Font;
@@ -54,25 +55,32 @@ public class Main extends JFrame {
         scrollPane.setBounds(textArea.getWidth() + 50, 32, 500, 500);
         container.add(scrollPane);
 
-        JButton buttonAnalisar = new JButton("Analize");
-        buttonAnalisar.addActionListener(new ActionListener() {
+        JButton analyserButton = new JButton("Analize");
+        analyserButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
                 String entrada = textArea.getText() + " ";
-                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
-
+                SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
                 try {
-                    List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
-                    generateTableResults(symbols);
+                    syntacticAnalyzer.analyse(entrada);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                    ex.printStackTrace();
                 }
+
+//                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
+//
+//                try {
+//                    List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
+//                    generateTableResults(symbols);
+//                } catch (Exception ex) {
+//                    JOptionPane.showMessageDialog(null, ex.getMessage());
+//                }
 
             }
         });
-        buttonAnalisar.setFont(new Font("Arial Black", Font.BOLD, 14));
-        buttonAnalisar.setBounds(550, 550, 215, 47);
-        getContentPane().add(buttonAnalisar);
+        analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
+        analyserButton.setBounds(550, 550, 215, 47);
+        getContentPane().add(analyserButton);
 
         JButton buttonLimpar = new JButton("Clean");
         buttonLimpar.addActionListener(new ActionListener() {
