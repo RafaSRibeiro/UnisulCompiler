@@ -3,72 +3,76 @@ package syntacticAnalyzer;
 import lexicoAnalyzer.LexicoAnalyzer;
 import lexicoAnalyzer.Symbol;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class SyntacticAnalyzer {
 
-    private final int finalSymbol = Constants.DOLLAR;
+    private Object List;
 
-    public void analyse(String program) throws Exception {
+    public void analyse(String program) throws SyntacticAnalyzerException {
 
         Stack auxStack = new Stack();
         auxStack.push(ParserConstants.START_SYMBOL);
 
         List<Symbol> symbols = this.getLexicoAnalyzerSymbols(program);
         Stack inputSymbols = new Stack();
-        for (Symbol symbol : symbols) {
-            inputSymbols.push(symbol.getId());
+        for (int i = symbols.size() - 1; i >= 0; i--) {
+            inputSymbols.add(symbols.get(i).getId());
         }
 
         do {
-            int currentAuxToken = ((Integer) auxStack.elementAt(0)).intValue();
-            int currentToken = ((Integer) inputSymbols.elementAt(0)).intValue();
-            if (isTerminal(currentAuxToken) || isFinal(currentAuxToken)) {
+            int currentAuxToken = ((Integer) auxStack.peek()).intValue();
+            int currentToken = ((Integer) inputSymbols.peek()).intValue();
+            if (isTerminal(currentAuxToken) || auxStack.empty()) {
                 if (currentAuxToken == currentToken) {
                     auxStack.pop();
-                    inputSymbols.pop();
+                    auxStack.pop();
                 } else {
-                    error(currentAuxToken);
+                    throw new SyntacticAnalyzerException(error(currentAuxToken));
                 }
             } else if (isNonTerminal(currentAuxToken)) {
                 if (hasParseTable(currentAuxToken, currentToken)) {
                     auxStack.pop();
                     int parseTableId = getParseTable(currentAuxToken, currentToken);
-                    auxStack.push(getProductionRules(parseTableId));
+                    int[] rules = getProductionRules(parseTableId);
+                    for (int i = rules.length - 1; i >= 0; i--) {
+                        auxStack.push(rules[i]);
+                    }
                 } else {
-                    error(currentAuxToken);
+                    throw new SyntacticAnalyzerException(error(currentAuxToken));
                 }
 
             } else {
-                error(currentAuxToken);
+                throw new SyntacticAnalyzerException(error(currentAuxToken));
             }
         } while (!auxStack.empty());
     }
 
-    private List<Symbol> getLexicoAnalyzerSymbols(String program) throws Exception {
+    private List<Symbol> getLexicoAnalyzerSymbols(String program) throws SyntacticAnalyzerException {
         LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
-        return lexicoAnalyzer.analyze(program);
+        try {
+            return lexicoAnalyzer.analyze(program);
+        } catch (Exception e) {
+            return  new ArrayList<Symbol>();
+        }
     }
 
     private boolean isTerminal(int tokenId) {
         return tokenId < ParserConstants.FIRST_NON_TERMINAL;
     }
 
-    private boolean isFinal(int tokenId) {
-        return tokenId == Constants.DOLLAR;
-    }
-
     private boolean isNonTerminal(int tokenId) {
         return tokenId >= ParserConstants.FIRST_NON_TERMINAL && tokenId < ParserConstants.FIRST_SEMANTIC_ACTION;
     }
 
-    private boolean hasParseTable(int x, int a) {
-        return ParserConstants.PARSER_TABLE[x-1][a-1] > -1;
+    private boolean hasParseTable(int row, int col) {
+        return getParseTable(row, col) > -1;
     }
 
-    private int getParseTable(int x, int a) {
-        return ParserConstants.PARSER_TABLE[x][a];
+    private int getParseTable(int row, int col) {
+        return ParserConstants.PARSER_TABLE[row - ParserConstants.START_SYMBOL][col - 1];
     }
 
     private int[] getProductionRules(int parseTableId) {
@@ -76,7 +80,6 @@ public class SyntacticAnalyzer {
     }
 
     private String error(int errorId) {
-        System.out.print(ParserConstants.PARSER_ERROR[errorId]);
         return ParserConstants.PARSER_ERROR[errorId];
     }
 }

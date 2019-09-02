@@ -3,6 +3,7 @@ package program;
 import lexicoAnalyzer.LexicoAnalyzer;
 import lexicoAnalyzer.Symbol;
 import syntacticAnalyzer.SyntacticAnalyzer;
+import syntacticAnalyzer.SyntacticAnalyzerException;
 
 import java.awt.Container;
 import java.awt.Font;
@@ -40,10 +41,14 @@ public class Main extends JFrame {
 
         table = new JTable(model);
 
-        JLabel labelEntrada = new JLabel("Input:");
-        labelEntrada.setFont(new Font("Arial Black", Font.BOLD, 14));
-        labelEntrada.setBounds(10, 10, 73, 14);
-        getContentPane().add(labelEntrada);
+        JLabel labelInput = new JLabel("Input:");
+        labelInput.setFont(new Font("Arial Black", Font.BOLD, 14));
+        labelInput.setBounds(10, 10, 73, 14);
+        getContentPane().add(labelInput);
+
+        final TextArea textAreaError = new TextArea();
+        textAreaError.setBounds(10, 550, 500, 300);
+        getContentPane().add(textAreaError);
 
         textArea = new TextArea();
         textArea.setBounds(10, 33, 500, 500);
@@ -63,8 +68,9 @@ public class Main extends JFrame {
                 SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
                 try {
                     syntacticAnalyzer.analyse(entrada);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    textAreaError.setText("Concluído ");
+                } catch (SyntacticAnalyzerException e1) {
+                    textAreaError.setText("Error: " + e1.getMessage());
                 }
 
 //                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
