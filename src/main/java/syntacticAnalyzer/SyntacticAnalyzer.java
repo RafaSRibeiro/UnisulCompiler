@@ -37,7 +37,6 @@ public class SyntacticAnalyzer {
                     throw new SyntacticAnalyzerException(error(currentAuxToken, currentToken));
                 }
             } else if (isNonTerminal(currentAuxToken)) {
-                System.out.println(ParserConstants.PARSER_TABLE[currentAuxToken - ParserConstants.START_SYMBOL][currentToken.getId() - 1]);
                 if (hasParseTable(currentAuxToken, currentToken.getId())) {
                     auxStack.pop();
                     int parseTableId = getParseTable(currentAuxToken, currentToken.getId());
