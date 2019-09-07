@@ -11,52 +11,48 @@ public class SyntacticAnalyzer {
 
     private Object List;
 
-    public void analyse(String program) throws SyntacticAnalyzerException {
+    public void analyse(List<Symbol> symbols) throws SyntacticAnalyzerException {
 
         Stack auxStack = new Stack();
         auxStack.push(ParserConstants.START_SYMBOL);
 
-        List<Symbol> symbols = this.getLexicoAnalyzerSymbols(program);
         Stack inputSymbols = new Stack();
         for (int i = symbols.size() - 1; i >= 0; i--) {
-            inputSymbols.add(symbols.get(i).getId());
+            inputSymbols.add(symbols.get(i));
         }
 
         do {
+            while (((Integer) auxStack.peek()).intValue() == Constants.EPSILON) {
+                auxStack.pop();
+            }
             int currentAuxToken = ((Integer) auxStack.peek()).intValue();
-            int currentToken = ((Integer) inputSymbols.peek()).intValue();
+
+            Symbol currentToken = (Symbol) inputSymbols.peek();
+
             if (isTerminal(currentAuxToken) || auxStack.empty()) {
-                if (currentAuxToken == currentToken) {
+                if (currentAuxToken == currentToken.getId()) {
                     auxStack.pop();
-                    auxStack.pop();
+                    inputSymbols.pop();
                 } else {
-                    throw new SyntacticAnalyzerException(error(currentAuxToken));
+                    throw new SyntacticAnalyzerException(error(currentAuxToken, currentToken));
                 }
             } else if (isNonTerminal(currentAuxToken)) {
-                if (hasParseTable(currentAuxToken, currentToken)) {
+                System.out.println(ParserConstants.PARSER_TABLE[currentAuxToken - ParserConstants.START_SYMBOL][currentToken.getId() - 1]);
+                if (hasParseTable(currentAuxToken, currentToken.getId())) {
                     auxStack.pop();
-                    int parseTableId = getParseTable(currentAuxToken, currentToken);
+                    int parseTableId = getParseTable(currentAuxToken, currentToken.getId());
                     int[] rules = getProductionRules(parseTableId);
                     for (int i = rules.length - 1; i >= 0; i--) {
                         auxStack.push(rules[i]);
                     }
                 } else {
-                    throw new SyntacticAnalyzerException(error(currentAuxToken));
+                    throw new SyntacticAnalyzerException(error(currentAuxToken, currentToken));
                 }
 
             } else {
-                throw new SyntacticAnalyzerException(error(currentAuxToken));
+                throw new SyntacticAnalyzerException(error(currentAuxToken, currentToken));
             }
         } while (!auxStack.empty());
-    }
-
-    private List<Symbol> getLexicoAnalyzerSymbols(String program) throws SyntacticAnalyzerException {
-        LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
-        try {
-            return lexicoAnalyzer.analyze(program);
-        } catch (Exception e) {
-            return  new ArrayList<Symbol>();
-        }
     }
 
     private boolean isTerminal(int tokenId) {
@@ -79,7 +75,7 @@ public class SyntacticAnalyzer {
         return ParserConstants.PRODUCTIONS[parseTableId];
     }
 
-    private String error(int errorId) {
-        return ParserConstants.PARSER_ERROR[errorId];
+    private String error(int errorId, Symbol symbol) {
+        return ParserConstants.PARSER_ERROR[errorId] + " - " + symbol.getToken() + ": " + symbol.getDescription();
     }
 }

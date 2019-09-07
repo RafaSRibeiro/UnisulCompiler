@@ -62,27 +62,27 @@ public class Main extends JFrame {
 
         JButton analyserButton = new JButton("Analize");
         analyserButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
 
+            public void actionPerformed(ActionEvent e) {
                 String entrada = textArea.getText() + " ";
-                SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+
+                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
+
                 try {
-                    syntacticAnalyzer.analyse(entrada);
-                    textAreaError.setText("Concluído ");
-                } catch (SyntacticAnalyzerException e1) {
-                    textAreaError.setText("Error: " + e1.getMessage());
+                    List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
+                    generateTableResults(symbols);
+                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+                    syntacticAnalyzer.analyse(symbols);
+                    textAreaError.setText("Finished ");
+                } catch (SyntacticAnalyzerException ex) {
+                    textAreaError.setText("Error: " + ex.getMessage());
+                } catch (Exception ex) {
+                    textAreaError.setText("Error: " + ex.getMessage());
                 }
 
-//                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
-//
-//                try {
-//                    List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
-//                    generateTableResults(symbols);
-//                } catch (Exception ex) {
-//                    JOptionPane.showMessageDialog(null, ex.getMessage());
-//                }
 
             }
+
         });
         analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
         analyserButton.setBounds(550, 550, 215, 47);
