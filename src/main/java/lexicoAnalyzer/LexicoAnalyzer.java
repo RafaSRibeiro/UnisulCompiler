@@ -1,6 +1,7 @@
 package lexicoAnalyzer;
 
 import program.Main;
+import syntacticAnalyzer.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class LexicoAnalyzer {
                             resetBuffer();
                         } else {
                             if (string.length() <= 30) {
-                                symbols.add(new Symbol(19, buffer.toString(), "Identificador"));
+                                symbols.add(new Symbol(Constants.t_IDENT, buffer.toString(), "Identificador"));
                                 resetBuffer();
                             } else {
                                 showError(String.format("Identificador com " + string.length() + " caracteres. Tamanho máximo permitido é 30 caracteres. Linha: " + row + ". Coluna: " + column + "."));
@@ -99,7 +100,7 @@ public class LexicoAnalyzer {
                         String string = buffer.toString();
                         int inteiro = Integer.parseInt(string);
                         if (inteiro <= 32767) {
-                            symbols.add(new Symbol(20, string, "Inteiro"));
+                            symbols.add(new Symbol(Constants.t_INTEIRO, string, "Inteiro"));
                             resetBuffer();
                         } else {
                             showError(String.format("Número inteiro " + string + " fora da escala. Máximo permitido é 32767 para inteiro. Linha: " + row + ". Coluna: " + column + "."));
@@ -120,7 +121,7 @@ public class LexicoAnalyzer {
 
                     String string = buffer.toString();
                     if (string.length() <= 255) {
-                        symbols.add(new Symbol(21, string, "Literal"));
+                        symbols.add(new Symbol(Constants.t_LITERAL, string, "Literal"));
                         resetBuffer();
                     } else {
                         showError(String.format("Literal com " + string.length() + " caracteres. Tamanho máximo permitido é 255 caracteres. Linha: " + row + ". Coluna: " + column + "."));
