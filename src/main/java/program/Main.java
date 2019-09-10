@@ -29,6 +29,7 @@ public class Main extends JFrame {
     private JScrollPane scrollPane;
 
     public Main() {
+        //definição da tela
         setTitle("Lexic Analizer");
         setResizable(true);
         this.setExtendedState( this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
@@ -63,17 +64,21 @@ public class Main extends JFrame {
         JButton analyserButton = new JButton("Analize");
         analyserButton.addActionListener(new ActionListener() {
 
+            //ação ao clica no botão
             public void actionPerformed(ActionEvent e) {
+                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
+                //atribui toda caixa de texto para uma string
                 String entrada = textArea.getText() + " ";
 
-                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
-
                 try {
+                    //analisa a entrada com o analizador léxico, convertendo em uma lista de simbolos
                     List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
                     generateTableResults(symbols);
                     SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+                    //analisa os simbolos retornados pelo lexico com analisador sintatico
                     syntacticAnalyzer.analyse(symbols);
-                    textAreaError.setText("Finished ");
+                    //se não houver nenhum erro, exibe a mensagem de conclusao
+                    textAreaError.setText("Finished");
                 } catch (SyntacticAnalyzerException ex) {
                     textAreaError.setText("Error: " + ex.getMessage());
                 } catch (Exception ex) {

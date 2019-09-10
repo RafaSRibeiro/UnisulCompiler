@@ -9,13 +9,9 @@ import java.util.List;
 public class LexicoAnalyzer {
 
     private String numbers = "0123456789";
-
     private String letters = "abcdefghijklmnopqrstuvxwyzABCDEFGHIJKLMNOPQRSTUVXWYZ";
-
     private List<Symbol> symbols;
-
     private Integer state;
-
     private StringBuilder buffer;
 
     public List<Symbol> analyze(String input) throws Exception {
