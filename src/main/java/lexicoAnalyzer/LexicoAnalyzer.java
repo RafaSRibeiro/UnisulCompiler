@@ -131,14 +131,14 @@ public class LexicoAnalyzer {
                         buffer.append(currentChar);
                         i++;
                     } else {
-                        addSymbolToList();
+                        addSymbolToList(row, col);
                     }
                     break;
 
                 case 6:
 
                     if (currentChar != '>' && currentChar != '=') {
-                        addSymbolToList();
+                        addSymbolToList(row, col);
                     } else {
                         state = 11;
                         buffer.append(currentChar);
@@ -151,7 +151,7 @@ public class LexicoAnalyzer {
                     if (currentChar == '*') {
                         state = 8;
                     } else {
-                        addSymbolToList();
+                        addSymbolToList(row, col);
                     }
                     break;
 
@@ -180,7 +180,7 @@ public class LexicoAnalyzer {
 
                 case 11:
 
-                    addSymbolToList();
+                    addSymbolToList(row, col);
                     break;
             }
             col++;
@@ -194,9 +194,14 @@ public class LexicoAnalyzer {
         state = 0;
     }
 
-    private void addSymbolToList() {
+    private void addSymbolToList(int row, int col) {
         String string = buffer.toString();
-        symbols.add(TerminalSymbols.Symbols.get(string));
+
+        Integer id = TerminalSymbols.Symbols.get(string).getId();
+        String token = TerminalSymbols.Symbols.get(string).getToken();
+        String description = TerminalSymbols.Symbols.get(string).getDescription();
+        Symbol symbol = new Symbol(id, token, description, row, col);
+        symbols.add(symbol);
         resetBuffer();
     }
 

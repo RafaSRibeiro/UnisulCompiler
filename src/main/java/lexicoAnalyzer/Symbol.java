@@ -52,15 +52,17 @@ public class Symbol {
         return row;
     }
 
-    public void setRow(int row) {
+    public Symbol setRow(int row) {
         this.row = row;
+        return this;
     }
 
     public int getCol() {
         return col;
     }
 
-    public void setCol(int col) {
+    public Symbol setCol(int col) {
         this.col = col;
+        return this;
     }
 }
