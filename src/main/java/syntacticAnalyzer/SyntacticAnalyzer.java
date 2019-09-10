@@ -85,6 +85,6 @@ public class SyntacticAnalyzer {
     }
     //metodo que mostra o erro
     private String error(int errorId, Symbol symbol) {
-        return ParserConstants.PARSER_ERROR[errorId] + " - " + symbol.getToken() + ": " + symbol.getDescription();
+        return ParserConstants.PARSER_ERROR[errorId] + " - " + symbol.getToken() + ": " + symbol.getDescription() + " Linha: " + symbol.getRow() + " - Coluna:"+ symbol.getCol();
     }
 }

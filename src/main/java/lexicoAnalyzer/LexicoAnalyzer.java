@@ -22,7 +22,7 @@ public class LexicoAnalyzer {
 
         int row = 1;
 
-        int column = 1;
+        int col = 1;
 
         int i = 0;
 
@@ -38,7 +38,7 @@ public class LexicoAnalyzer {
 
                         if (isNewLine(currentChar)) {
                             row++;
-                            column = 1;
+                            col = 1;
                         }
                         i++;
                         continue;
@@ -58,7 +58,7 @@ public class LexicoAnalyzer {
                     } else if (".,;)*/+-=$".indexOf(currentChar) != -1) {
                         state = 11;
                     } else {
-                        showError(String.format("Símbolo '" + currentChar + "' não reconhecido. Linha: " + row + ". Coluna: " + column + "."));
+                        showError(String.format("Símbolo '" + currentChar + "' não reconhecido. Linha: " + row + ". Coluna: " + col + "."));
                     }
 
                     buffer.append(currentChar);
@@ -78,10 +78,10 @@ public class LexicoAnalyzer {
                             resetBuffer();
                         } else {
                             if (string.length() <= 30) {
-                                symbols.add(new Symbol(Constants.t_IDENT, buffer.toString(), "Identificador"));
+                                symbols.add(new Symbol(Constants.t_IDENT, buffer.toString(), "Identificador", row, col));
                                 resetBuffer();
                             } else {
-                                showError(String.format("Identificador com " + string.length() + " caracteres. Tamanho máximo permitido é 30 caracteres. Linha: " + row + ". Coluna: " + column + "."));
+                                showError(String.format("Identificador com " + string.length() + " caracteres. Tamanho máximo permitido é 30 caracteres. Linha: " + row + ". Coluna: " + col + "."));
                             }
                         }
                     }
@@ -96,10 +96,10 @@ public class LexicoAnalyzer {
                         String string = buffer.toString();
                         int inteiro = Integer.parseInt(string);
                         if (inteiro <= 32767) {
-                            symbols.add(new Symbol(Constants.t_INTEIRO, string, "Inteiro"));
+                            symbols.add(new Symbol(Constants.t_INTEIRO, string, "Inteiro", row, col));
                             resetBuffer();
                         } else {
-                            showError(String.format("Número inteiro " + string + " fora da escala. Máximo permitido é 32767 para inteiro. Linha: " + row + ". Coluna: " + column + "."));
+                            showError(String.format("Número inteiro " + string + " fora da escala. Máximo permitido é 32767 para inteiro. Linha: " + row + ". Coluna: " + col + "."));
                         }
                     }
                     break;
@@ -117,10 +117,10 @@ public class LexicoAnalyzer {
 
                     String string = buffer.toString();
                     if (string.length() <= 255) {
-                        symbols.add(new Symbol(Constants.t_LITERAL, string, "Literal"));
+                        symbols.add(new Symbol(Constants.t_LITERAL, string, "Literal", row, col));
                         resetBuffer();
                     } else {
-                        showError(String.format("Literal com " + string.length() + " caracteres. Tamanho máximo permitido é 255 caracteres. Linha: " + row + ". Coluna: " + column + "."));
+                        showError(String.format("Literal com " + string.length() + " caracteres. Tamanho máximo permitido é 255 caracteres. Linha: " + row + ". Coluna: " + col + "."));
                     }
                     break;
 
@@ -183,7 +183,7 @@ public class LexicoAnalyzer {
                     addSymbolToList();
                     break;
             }
-            column++;
+            col++;
         }
 
         return symbols;
