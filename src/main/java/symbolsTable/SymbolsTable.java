@@ -22,6 +22,33 @@ public class SymbolsTable {
         }
     }
 
+    public void update(Symbol symbol, Symbol newSymbol) throws ClassNotFoundException {
+        int index = this.hash(symbol.name, tableSize);
+        if (hashtable[index] != null) {
+            Symbol symbolLinked = hashtable[index];
+            if (symbolLinked == symbol && symbolLinked.next == null) {
+                hashtable[index] = newSymbol;
+            } else if (symbolLinked == symbol) {
+                newSymbol.next = symbolLinked.next;
+                hashtable[index] = newSymbol;
+            } else {
+                Symbol previousSymbol = symbolLinked;
+                while (symbolLinked.next != symbol){
+                    previousSymbol = symbolLinked;
+                    symbolLinked = symbolLinked.next;
+                }
+                if (symbolLinked != null) {
+                    previousSymbol.next = newSymbol;
+                    newSymbol.next = symbolLinked.next;
+                } else {
+                    throw new ClassNotFoundException();
+                }
+            }
+        } else {
+            throw new ClassNotFoundException();
+        }
+    }
+
     public void remove(Symbol symbol) throws ClassNotFoundException {
         int index = this.hash(symbol.name, tableSize);
         if (hashtable[index] != null) {
@@ -38,6 +65,8 @@ public class SymbolsTable {
                 }
                 if (symbolLinked != null) {
                     previousSymbol.next = symbolLinked.next;
+                } else {
+                    throw new ClassNotFoundException();
                 }
             }
         } else {
