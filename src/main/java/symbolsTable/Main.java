@@ -15,6 +15,7 @@ public class Main {
 
 
         SymbolsTable symbolTable = new SymbolsTable();
+//        Adiciona Symbolos
         symbolTable.add(symbol1);
         symbolTable.add(symbol2);
         symbolTable.add(symbol3);
@@ -24,6 +25,7 @@ public class Main {
         symbolTable.add(symbol7);
         symbolTable.add(symbol8);
 
+//        Altera Symbolos
         Symbol symbol1v2 = new Symbol("var1", 1, 1, 1, 1);
         Symbol symbol6v2 = new Symbol("var3", 5, 1, 1, 0);
         Symbol symbol8v2 = new Symbol("pq", 2, 1, 1, 1);
@@ -34,6 +36,23 @@ public class Main {
         } catch (ClassNotFoundException e) {
 
         }
+
+//        Remove Symbolos
+        try {
+            symbolTable.remove(symbol2);
+            symbolTable.remove(symbol8v2);
+        } catch (ClassNotFoundException e) {
+
+        }
+
+//        Busca Symbolos
+        try {
+            symbolTable.find(symbol5);
+            symbolTable.find(symbol8v2);
+        } catch (ClassNotFoundException e) {
+
+        }
+
     }
 
     public static void main(String[] args) {

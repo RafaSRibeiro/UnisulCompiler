@@ -33,7 +33,8 @@ public class SymbolsTable {
                 hashtable[index] = newSymbol;
             } else {
                 Symbol previousSymbol = symbolLinked;
-                while (symbolLinked.next != symbol){
+                symbolLinked = symbolLinked.next;
+                while (symbolLinked != symbol){
                     previousSymbol = symbolLinked;
                     symbolLinked = symbolLinked.next;
                 }
@@ -59,7 +60,8 @@ public class SymbolsTable {
                 hashtable[index] = symbolLinked.next;
             } else {
                 Symbol previousSymbol = symbolLinked;
-                while (symbolLinked.next != symbol){
+                symbolLinked = symbolLinked.next;
+                while (symbolLinked != symbol){
                     previousSymbol = symbolLinked;
                     symbolLinked = symbolLinked.next;
                 }
@@ -85,6 +87,8 @@ public class SymbolsTable {
                 if (symbolLinked == symbol)
                     return symbolLinked;
             }
+            if (symbolLinked.next == null)
+                throw new ClassNotFoundException();
         } else {
             throw new ClassNotFoundException();
         }
