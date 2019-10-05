@@ -17,32 +17,26 @@ public class LexicoAnalyzer {
     public List<Symbol> analyze(String input) throws Exception {
 
         symbols = new ArrayList<Symbol>();
-
         resetBuffer();
-
         int row = 1;
-
         int col = 1;
-
         int i = 0;
 
         while (i < input.length()) {
-
+            //pega o char correspondente a posição na string
             char currentChar = input.charAt(i);
-
             switch (state) {
 
                 case 0:
-
                     if (isIgnoredChar(currentChar)) {
-
+                        //se o caractere atual for "ignorado" e for uma linha nova
                         if (isNewLine(currentChar)) {
+                            //incrementa os contadores de linha e coluna para a mensagem de erro
                             row++;
                             col = 1;
                         }
                         i++;
                         continue;
-
                     } else if (isAlphabet(currentChar)) {
                         state = 1;
                     } else if (isNumber(currentChar)) {
@@ -60,13 +54,11 @@ public class LexicoAnalyzer {
                     } else {
                         showError(String.format("Símbolo '" + currentChar + "' não reconhecido. Linha: " + row + ". Coluna: " + col + "."));
                     }
-
                     buffer.append(currentChar);
                     i++;
                     break;
 
                 case 1:
-
                     if (letters.contains(String.valueOf(currentChar)) || numbers.contains(String.valueOf(currentChar))) {
                         buffer.append(currentChar);
                         i++;
@@ -88,7 +80,6 @@ public class LexicoAnalyzer {
                     break;
 
                 case 2:
-
                     if (numbers.contains(String.valueOf(currentChar))) {
                         buffer.append(currentChar);
                         i++;
@@ -209,23 +200,21 @@ public class LexicoAnalyzer {
         Main.generateTableResults(symbols);
         throw new Exception(String.format(message));
     }
-
+    //checa se o caractere atual faz parte dos ignorados
     private boolean isIgnoredChar(char character) {
         return character == ' ' || character == '\t' || character == '\n' || character == '\r';
     }
-
+    //checa se o caractere atual é uma das letras que está na variavel letters
     private boolean isAlphabet(char character) {
         return letters.contains(String.valueOf(character));
     }
-
+    //checa se o caractere atual é um dos números que está na variável de referência dos números
     private boolean isNumber(char character) {
         return numbers.contains(String.valueOf(character));
     }
-
     private boolean isDoubleQuotes(char character) {
         return character == '"';
     }
-
     private boolean isNewLine(char character) {
         return character == '\n';
     }

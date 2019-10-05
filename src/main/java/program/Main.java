@@ -30,7 +30,7 @@ public class Main extends JFrame {
 
     public Main() {
         //definição da tela
-        setTitle("Lexic Analizer");
+        setTitle("Syntatic Analizer");
         setResizable(true);
         this.setExtendedState( this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
         this.setLocation(((Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 320) - (this.getWidth() / 2)),
@@ -73,9 +73,10 @@ public class Main extends JFrame {
                 try {
                     //analisa a entrada com o analizador léxico, convertendo em uma lista de simbolos
                     List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
+                    //plota os simbolos na tabela gráfica
                     generateTableResults(symbols);
-                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
                     //analisa os simbolos retornados pelo lexico com analisador sintatico
+                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
                     syntacticAnalyzer.analyse(symbols);
                     //se não houver nenhum erro, exibe a mensagem de conclusao
                     textAreaError.setText("Finished");
@@ -117,12 +118,14 @@ public class Main extends JFrame {
         new Main();
     }
 
+    //metodo que limpa a tabela gráfica
     public static void cleanTable() {
         while (table.getRowCount() > 0) {
             model.removeRow(0);
         }
     }
 
+    //metodo que plota os simbolos na tabela gráfica
     public static void generateTableResults(List<Symbol> symbols) {
         cleanTable();
         for (Symbol symbol : symbols) {

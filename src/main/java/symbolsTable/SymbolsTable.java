@@ -95,6 +95,39 @@ public class SymbolsTable {
         return symbol;
     }
 
+    public void printSymbolTable() {
+        String returnTable = "| %-10s | %-4d | %-4d | %-4d | %-4d |%n";
+        System.out.format("+------------+------+------+------+------+%n");
+        System.out.format("| name       | cat  | lvl  | gen1 | gen2 |%n");
+        System.out.format("+------------+------+------+------+------+%n");
+        Symbol actualSymbol;
+
+        for (int i = 0; i < hashtable.length; i++) {
+            if (hashtable[i] != null) {
+                actualSymbol = hashtable[i];
+                boolean colision = true;
+                boolean lastColision = false;
+
+                if (actualSymbol.next == null){
+                    System.out.format(returnTable, actualSymbol.name, actualSymbol.category, actualSymbol.level, actualSymbol.generalA,  actualSymbol.generalB);
+                }else {
+                    do {
+                        if (colision) {
+                            System.out.format(returnTable, actualSymbol.name, actualSymbol.category, actualSymbol.level, actualSymbol.generalA, actualSymbol.generalB);
+                        }else{
+                            System.out.format(returnTable, " - " + actualSymbol.name, actualSymbol.category, actualSymbol.level, actualSymbol.generalA, actualSymbol.generalB);
+                        }
+                        if (actualSymbol.next == null)
+                            lastColision = true;
+                        actualSymbol = actualSymbol.next;
+                        colision = false;
+                    } while (lastColision == false);
+                }
+            }
+        }
+        System.out.format("+------------+------+------+------+------+%n");
+    }
+
     private int hash(String key, int tableSize) {
         int hashVal = 0; //uses Horner’s method to evaluate a polynomial
         for (int i = 0; i < key.length(); i++)

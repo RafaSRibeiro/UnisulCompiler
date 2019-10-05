@@ -9,7 +9,6 @@ import java.util.Stack;
 
 public class SyntacticAnalyzer {
 
-    // private Object List;
     public void analyse(List<Symbol> symbols) throws SyntacticAnalyzerException {
 
         //instancia a pilha de simbolos e empilha $
@@ -76,8 +75,7 @@ public class SyntacticAnalyzer {
     private boolean hasParseTable(int row, int col) {
         return getParseTable(row, col) > -1;
     }
-    private int getParseTable(int row, int col) {
-        return ParserConstants.PARSER_TABLE[row - ParserConstants.START_SYMBOL][col - 1];
+    private int getParseTable(int row, int col) {return ParserConstants.PARSER_TABLE[row - ParserConstants.START_SYMBOL][col - 1];
     }
     //retorna a lista das regras de produções que serão utilizadas para a derivação
     private int[] getProductionRules(int parseTableId) {

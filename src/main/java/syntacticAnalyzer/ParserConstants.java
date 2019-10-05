@@ -2,9 +2,10 @@ package syntacticAnalyzer;
 
 public interface ParserConstants
 {
+    //simbolo definido como inicio do programa
     int START_SYMBOL = 46;
-
-    int FIRST_NON_TERMINAL    = 46;
+    //range dos estados não terminais
+    int FIRST_NON_TERMINAL = 46;
     int FIRST_SEMANTIC_ACTION = 77;
 
     int[][] PARSER_TABLE =

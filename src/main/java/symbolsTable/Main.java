@@ -4,6 +4,7 @@ public class Main {
 
     public Main() {
 
+        //instancia simbolos
         Symbol symbol1 = new Symbol("var1", 1, 0, 0, 0);
         Symbol symbol2 = new Symbol("var2", 1, 1, 0, 0);
         Symbol symbol3 = new Symbol("abc", 2, 0, 0, 0);
@@ -12,10 +13,11 @@ public class Main {
         Symbol symbol6 = new Symbol("var3", 1, 0, 0, 0);
         Symbol symbol7 = new Symbol("pq", 3, 0, 0, 0);
         Symbol symbol8 = new Symbol("pq", 3, 0, 0, 0);
+        Symbol symbol9 = new Symbol("name_proc", 4, 0, 0, 0);
+        Symbol symbol10 = new Symbol("aux_var1", 2, 0, 0, 0);
 
-
-        SymbolsTable symbolTable = new SymbolsTable();
 //        Adiciona Symbolos
+        SymbolsTable symbolTable = new SymbolsTable();
         symbolTable.add(symbol1);
         symbolTable.add(symbol2);
         symbolTable.add(symbol3);
@@ -24,26 +26,39 @@ public class Main {
         symbolTable.add(symbol6);
         symbolTable.add(symbol7);
         symbolTable.add(symbol8);
+        symbolTable.add(symbol9);
+        symbolTable.add(symbol10);
+        System.out.println("Adicionado 10 itens");
+        symbolTable.printSymbolTable();
 
 //        Altera Symbolos
         Symbol symbol1v2 = new Symbol("var1", 1, 1, 1, 1);
         Symbol symbol6v2 = new Symbol("var3", 5, 1, 1, 0);
         Symbol symbol8v2 = new Symbol("pq", 2, 1, 1, 1);
+        Symbol symbol9v2 = new Symbol("name_proc", 1, 1, 0, 0);
+        Symbol symbol10v2 = new Symbol("aux_var1", 2, 1, 1, 1);
         try {
             symbolTable.update(symbol1, symbol1v2);
             symbolTable.update(symbol6, symbol6v2);
             symbolTable.update(symbol8, symbol8v2);
+            symbolTable.update(symbol9, symbol9v2);
+            symbolTable.update(symbol10, symbol10v2);
         } catch (ClassNotFoundException e) {
 
         }
+        System.out.println("Editado 5 itens");
+        symbolTable.printSymbolTable();
 
 //        Remove Symbolos
         try {
             symbolTable.remove(symbol2);
             symbolTable.remove(symbol8v2);
+            symbolTable.remove(symbol7);
         } catch (ClassNotFoundException e) {
 
         }
+        System.out.println("Removido 3 itens");
+        symbolTable.printSymbolTable();
 
 //        Busca Symbolos
         try {
