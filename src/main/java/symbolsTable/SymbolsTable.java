@@ -61,7 +61,7 @@ public class SymbolsTable {
             } else if (symbolLinked.next != null) { //Se não for o mesmo simbolo do has mas possui lista encadeada, procura pelos itens da lista.
                 Symbol previousSymbol = symbolLinked;
                 symbolLinked = symbolLinked.next;
-                while (symbolLinked != symbol){
+                while (symbolLinked != null && symbolLinked != symbol){
                     previousSymbol = symbolLinked;
                     symbolLinked = symbolLinked.next;
                 }
@@ -98,10 +98,10 @@ public class SymbolsTable {
     }
 
     public void printSymbolTable() {
-        String returnTable = "| %-10s | %-4d | %-4d | %-4d | %-4d |%n";
-        System.out.format("+------------+------+------+------+------+%n");
-        System.out.format("| name       | cat  | lvl  | gen1 | gen2 |%n");
-        System.out.format("+------------+------+------+------+------+%n");
+        String returnTable = "| %-15s | %-4d | %-4d | %-4d | %-4d |%n";
+        System.out.format("+-----------------+------+------+------+------+%n");
+        System.out.format("| name            | cat  | lvl  | gen1 | gen2 |%n");
+        System.out.format("+-----------------+------+------+------+------+%n");
         Symbol actualSymbol;
 
         for (int i = 0; i < hashtable.length; i++) {
@@ -127,7 +127,7 @@ public class SymbolsTable {
                 }
             }
         }
-        System.out.format("+------------+------+------+------+------+%n");
+        System.out.format("+-----------------+------+------+------+------+%n");
     }
 
     private int hash(String key, int tableSize) {
