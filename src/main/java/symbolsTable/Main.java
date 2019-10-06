@@ -113,7 +113,4 @@ public class Main {
         new Main();
     }
 
-    private void removeSymbols() {
-
-    }
 }
