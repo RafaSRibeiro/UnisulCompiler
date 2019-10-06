@@ -44,7 +44,7 @@ public class Main {
             symbolTable.update(symbol9, symbol9v2);
             symbolTable.update(symbol10, symbol10v2);
         } catch (ClassNotFoundException e) {
-
+            System.out.println(e.getMessage());
         }
         System.out.println("Editado 5 itens");
         symbolTable.printSymbolTable();
@@ -53,9 +53,9 @@ public class Main {
         try {
             symbolTable.remove(symbol2);
             symbolTable.remove(symbol8v2);
-            symbolTable.remove(symbol7);
+            symbolTable.remove(symbol9);
         } catch (ClassNotFoundException e) {
-
+            System.out.println(e.getMessage());
         }
         System.out.println("Removido 3 itens");
         symbolTable.printSymbolTable();
@@ -65,7 +65,7 @@ public class Main {
             symbolTable.find(symbol5);
             symbolTable.find(symbol8v2);
         } catch (ClassNotFoundException e) {
-
+            System.out.println(e.getMessage());
         }
 
     }

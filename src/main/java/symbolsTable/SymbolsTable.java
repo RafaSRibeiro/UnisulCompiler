@@ -42,11 +42,11 @@ public class SymbolsTable {
                     previousSymbol.next = newSymbol;
                     newSymbol.next = symbolLinked.next;
                 } else {
-                    throw new ClassNotFoundException();
+                    throw new ClassNotFoundException(symbol.name + " não existe");
                 }
             }
         } else {
-            throw new ClassNotFoundException();
+            throw new ClassNotFoundException(symbol.name + " não existe");
         }
     }
 
@@ -56,9 +56,9 @@ public class SymbolsTable {
             Symbol symbolLinked = hashtable[index];
             if (symbolLinked == symbol && symbolLinked.next == null) {
                 hashtable[index] = null;
-            } else if (symbolLinked == symbol) {
+            } else if (symbolLinked == symbol && symbolLinked.next != null) {
                 hashtable[index] = symbolLinked.next;
-            } else {
+            } else if (symbolLinked.next != null) {
                 Symbol previousSymbol = symbolLinked;
                 symbolLinked = symbolLinked.next;
                 while (symbolLinked != symbol){
@@ -68,11 +68,13 @@ public class SymbolsTable {
                 if (symbolLinked != null) {
                     previousSymbol.next = symbolLinked.next;
                 } else {
-                    throw new ClassNotFoundException();
+                    throw new ClassNotFoundException(symbol.name + " não existe");
                 }
+            } else {
+                throw new ClassNotFoundException(symbol.name + " não existe");
             }
         } else {
-            throw new ClassNotFoundException();
+            throw new ClassNotFoundException(symbol.name + " não existe");
         }
     }
 
@@ -88,9 +90,9 @@ public class SymbolsTable {
                     return symbolLinked;
             }
             if (symbolLinked.next == null)
-                throw new ClassNotFoundException();
+                throw new ClassNotFoundException(symbol.name + " não existe");
         } else {
-            throw new ClassNotFoundException();
+            throw new ClassNotFoundException(symbol.name + " não existe");
         }
         return symbol;
     }
