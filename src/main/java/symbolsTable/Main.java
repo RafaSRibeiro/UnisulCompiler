@@ -28,7 +28,7 @@ public class Main {
         symbolTable.add(symbol8);
         symbolTable.add(symbol9);
         symbolTable.add(symbol10);
-        System.out.println("Adicionado 10 itens");
+        System.out.println("Símbolos adicionados");
         symbolTable.printSymbolTable();
 
 //        Altera Symbolos
