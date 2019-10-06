@@ -42,11 +42,11 @@ public class SymbolsTable {
                     previousSymbol.next = newSymbol;
                     newSymbol.next = symbolLinked.next;
                 } else {
-                    throw new ClassNotFoundException("Símbolo" + symbol.name + " não existe");
+                    throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
                 }
             }
         } else {
-            throw new ClassNotFoundException("Símbolo" + symbol.name + " não existe");
+            throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
         }
     }
 
@@ -68,13 +68,13 @@ public class SymbolsTable {
                 if (symbolLinked != null) {
                     previousSymbol.next = symbolLinked.next;
                 } else {
-                    throw new ClassNotFoundException("Símbolo" + symbol.name + " não existe");
+                    throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
                 }
             } else {
-                throw new ClassNotFoundException("Símbolo" + symbol.name + " não existe");
+                throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
             }
         } else {
-            throw new ClassNotFoundException("Símbolo" + symbol.name + " não existe");
+            throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
         }
     }
 
@@ -90,9 +90,9 @@ public class SymbolsTable {
                     return symbolLinked;
             }
             if (symbolLinked.next == null)
-                throw new ClassNotFoundException("Símbolo" + symbol.name + " não existe");
+                throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
         } else {
-            throw new ClassNotFoundException("Símbolo" + symbol.name + " não existe");
+            throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
         }
         return symbol;
     }
