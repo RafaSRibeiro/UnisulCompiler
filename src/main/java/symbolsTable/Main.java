@@ -39,31 +39,70 @@ public class Main {
         Symbol symbol10v2 = new Symbol("aux_var1", 2, 1, 1, 1);
         try {
             symbolTable.update(symbol1, symbol1v2);
-            symbolTable.update(symbol6, symbol6v2);
-            symbolTable.update(symbol8, symbol8v2);
-            symbolTable.update(symbol9, symbol9v2);
-            symbolTable.update(symbol10, symbol10v2);
+            System.out.format("Símbolo %s editado.%n", symbol1.name);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Símbolos editado ");
+        try {
+            symbolTable.update(symbol6, symbol6v2);
+            System.out.format("Símbolo %s editado.%n", symbol6.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            symbolTable.update(symbol8, symbol8v2);
+            System.out.format("Símbolo %s editado.%n", symbol8.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            symbolTable.update(symbol9, symbol9v2);
+            System.out.format("Símbolo %s editado.%n", symbol9.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            symbolTable.update(symbol10, symbol10v2);
+            System.out.format("Símbolo %s editado.%n", symbol10.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
         symbolTable.printSymbolTable();
 
 //        Remove Symbolos
         try {
             symbolTable.remove(symbol2);
-            symbolTable.remove(symbol8v2);
-            symbolTable.remove(symbol9);
+            System.out.format("Símbolo %s removido.%n", symbol2.name);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Símbolos removidos");
+
+        try {
+            symbolTable.remove(symbol8v2);
+            System.out.format("Símbolo %s removido.%n", symbol8v2.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            symbolTable.remove(symbol9);
+            System.out.format("Símbolo %s removido.%n", symbol9.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
         symbolTable.printSymbolTable();
 
 //        Busca Symbolos
         try {
             symbolTable.find(symbol5);
+            System.out.format("Símbolo %s encontrado.%n", symbol5.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
             symbolTable.find(symbol8v2);
+            System.out.format("Símbolo %s encontrado.%n", symbol8v2.name);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -72,5 +111,9 @@ public class Main {
 
     public static void main(String[] args) {
         new Main();
+    }
+
+    private void removeSymbols() {
+
     }
 }
