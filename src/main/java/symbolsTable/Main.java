@@ -46,7 +46,7 @@ public class Main {
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Editado 5 itens");
+        System.out.println("Símbolos editado ");
         symbolTable.printSymbolTable();
 
 //        Remove Symbolos
@@ -57,7 +57,7 @@ public class Main {
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Removido 3 itens");
+        System.out.println("Símbolos removidos");
         symbolTable.printSymbolTable();
 
 //        Busca Symbolos

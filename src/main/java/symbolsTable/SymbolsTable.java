@@ -54,11 +54,11 @@ public class SymbolsTable {
         int index = this.hash(symbol.name, tableSize);
         if (hashtable[index] != null) {
             Symbol symbolLinked = hashtable[index];
-            if (symbolLinked == symbol && symbolLinked.next == null) {
+            if (symbolLinked == symbol && symbolLinked.next == null) { //Verifica se é o mesmo simbolo do hash e se não possui lista encadeada.
                 hashtable[index] = null;
-            } else if (symbolLinked == symbol && symbolLinked.next != null) {
+            } else if (symbolLinked == symbol && symbolLinked.next != null) { //Verifica se é o mesmo simbolo do hash e se possui lista encadeada.
                 hashtable[index] = symbolLinked.next;
-            } else if (symbolLinked.next != null) {
+            } else if (symbolLinked.next != null) { //Se não for o mesmo simbolo do has mas possui lista encadeada, procura pelos itens da lista.
                 Symbol previousSymbol = symbolLinked;
                 symbolLinked = symbolLinked.next;
                 while (symbolLinked != symbol){
