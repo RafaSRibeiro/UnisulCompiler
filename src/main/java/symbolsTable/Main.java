@@ -92,7 +92,7 @@ public class Main {
         }
         symbolTable.printSymbolTable();
 
-//        Busca Symbolos
+//        Busca Symbolos, TESTE COMMIT
         try {
             symbolTable.find(symbol5);
             System.out.format("Símbolo %s encontrado.%n", symbol5.name);
