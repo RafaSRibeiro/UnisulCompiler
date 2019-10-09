@@ -92,17 +92,31 @@ public class Main {
         }
         symbolTable.printSymbolTable();
 
-//        Busca Symbolos, TESTE COMMIT
-        try {
-            symbolTable.find(symbol5);
-            System.out.format("Símbolo %s encontrado.%n", symbol5.name);
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+//        Busca Simbolo que não existe
 
         try {
             symbolTable.find(symbol8v2);
             System.out.format("Símbolo %s encontrado.%n", symbol8v2.name);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // Busca 3 simbolos que existem
+        try {
+            symbolTable.find(symbol5);
+            System.out.format("Símbolo %s encontrado.%n", symbol5.name + ", " + symbol5.category + ", " + symbol5.level + ", " + symbol5.generalA + ", " + symbol5.generalB);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            symbolTable.find(symbol7);
+            System.out.format("Símbolo %s encontrado.%n", symbol7.name + ", " + symbol7.category + ", " + symbol7.level + ", " + symbol7.generalA + ", " + symbol7.generalB);
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            symbolTable.find(symbol10v2);
+            System.out.format("Símbolo %s encontrado.%n", symbol10v2.name + ", " + symbol10v2.category + ", " + symbol10v2.level + ", " + symbol10v2.generalA + ", " + symbol10v2.generalB);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
