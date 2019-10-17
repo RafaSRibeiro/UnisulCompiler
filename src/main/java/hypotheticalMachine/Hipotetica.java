@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
  * para este aplicativo.
  */
 class Hipotetica{
+
     public static int MaxInst=1000;
     public static int MaxList=30;
     public static int b; //base do segmento
@@ -40,23 +41,23 @@ class Hipotetica{
     /**
      * Inicializa a área de instruções.
      */
-    public static void InicializaAI(AreaInstrucoes AI){
+    public static void InicializaAI(AreaInstrucoes areaInstrucoes){
         for (int i=0;i<MaxInst;i++){ //começava de 1
-            AI.AI[i].codigo=-1;
-            AI.AI[i].op1=-1;
-            AI.AI[i].op2=-1;
+            areaInstrucoes.AI[i].codigo=-1;
+            areaInstrucoes.AI[i].op1=-1;
+            areaInstrucoes.AI[i].op2=-1;
         }
-        AI.LC=0;
+        areaInstrucoes.LC=0;
     }
 
     /**
      * Inicializa a área de literais
      */
-    public static void InicializaAL(AreaLiterais AL){
+    public static void InicializaAL(AreaLiterais areaLiterais){
 
         for (int i=0;i<MaxList;i++){
-            AL.AL[i]="";
-            AL.LIT=0;
+            areaLiterais.AL[i]="";
+            areaLiterais.LIT=0;
         }
     }
 
@@ -64,33 +65,33 @@ class Hipotetica{
      * Inclui uma instrução na área de instruções utilizada pela máquina
      * hipotética.
      */
-    public boolean IncluirAI(AreaInstrucoes AI, int c, int o1, int o2) {
+    public boolean IncluirAI(AreaInstrucoes areaInstrucoes, int c, int o1, int o2) {
         boolean aux;
-        if(AI.LC>=MaxInst)
+        if(areaInstrucoes.LC>=MaxInst)
         {
             aux=false;
         }
         else
         {
             aux=true;
-            AI.AI[AI.LC].codigo=c;
+            areaInstrucoes.AI[areaInstrucoes.LC].codigo=c;
 
             if(o1 != -1)
             {
-                AI.AI[AI.LC].op1=o1;
+                areaInstrucoes.AI[areaInstrucoes.LC].op1=o1;
             }
 
             if(c==24)
             {
-                AI.AI[AI.LC].op2=o2;
+                areaInstrucoes.AI[areaInstrucoes.LC].op2=o2;
             }
 
             if(o2!=-1)
             {
-                AI.AI[AI.LC].op2=o2;
+                areaInstrucoes.AI[areaInstrucoes.LC].op2=o2;
             }
 
-            AI.LC=AI.LC+1;
+            areaInstrucoes.LC=areaInstrucoes.LC+1;
         }
         return aux;
     }
@@ -99,14 +100,14 @@ class Hipotetica{
      * Altera uma instrução da área de instruções utilizada pela máquina
      * hipotética.
      */
-    public static void AlterarAI(AreaInstrucoes AI, int s, int o1, int o2){
+    public static void AlterarAI(AreaInstrucoes areaInstrucoes, int s, int o1, int o2){
 
         if (o1!=-1){
-            AI.AI[s].op1=o1;
+            areaInstrucoes.AI[s].op1=o1;
         }
 
         if(o2!=-1){
-            AI.AI[s].op2=o2;
+            areaInstrucoes.AI[s].op2=o2;
         }
     }
 
@@ -114,14 +115,14 @@ class Hipotetica{
      * Inclui um literal na área de literais utilizada pela máquina
      * hipotética.
      */
-    public static boolean IncluirAL(AreaLiterais AL, String literal){
+    public static boolean IncluirAL(AreaLiterais areaLiterais, String literal){
         boolean aux;
-        if (AL.LIT>=MaxList){
+        if (areaLiterais.LIT>=MaxList){
             aux=false;
         }else{
             aux=true;
-            AL.AL[AL.LIT]=literal;
-            AL.LIT=AL.LIT+1;
+            areaLiterais.AL[areaLiterais.LIT]=literal;
+            areaLiterais.LIT=areaLiterais.LIT+1;
         }
         return aux;
     }
@@ -142,7 +143,7 @@ class Hipotetica{
     /**
      * Responsável por interpretar as instruções.
      */
-    public static void Interpreta(AreaInstrucoes AI, AreaLiterais AL){
+    public static void Interpreta(AreaInstrucoes areaInstrucoes, AreaLiterais areaLiterais){
 
         topo=0;
         b=0; //registrador base
@@ -156,11 +157,11 @@ class Hipotetica{
 
         while (operador != 26) {//Enquanto instrução diferente de PARE
 
-            operador=AI.AI[p].codigo;
+            operador=areaInstrucoes.AI[p].codigo;
 
 
-            l=AI.AI[p].op1;
-            a=AI.AI[p].op2;
+            l=areaInstrucoes.AI[p].op1;
+            a=areaInstrucoes.AI[p].op2;
             p=p+1;
 
             switch (operador){
@@ -314,12 +315,12 @@ class Hipotetica{
                     break;
 
                 case 23://IMPRLIT
-                    if (a>= AL.LIT)
+                    if (a>= areaLiterais.LIT)
                     {
                         JOptionPane.showMessageDialog(null,"Literal não encontrado na área dos literais.","Erro durante a execução",JOptionPane.ERROR_MESSAGE);
                         //System.out.println("ERRO >> Literal nao encontrada na area"); A
                     }else{
-                        JOptionPane.showMessageDialog(null,"" + AL.AL[a],"Informação",JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null,"" + areaLiterais.AL[a],"Informação",JOptionPane.INFORMATION_MESSAGE);
                         //System.out.println(AL.AL[a]); A
                         //AL.LIT++;
                     }

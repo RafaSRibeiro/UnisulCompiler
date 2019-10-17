@@ -8,6 +8,7 @@ package hypotheticalMachine;
  * para este aplicativo.
  */
 class AreaInstrucoes{
+
     public Tipos AI[]= new Tipos[1000];
     public int LC;
 

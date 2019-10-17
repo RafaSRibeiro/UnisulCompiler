@@ -8,6 +8,7 @@ package hypotheticalMachine;
  * para este aplicativo.
  */
 class Tipos{
+
     public int codigo;
     public int op1;
     public int op2;
