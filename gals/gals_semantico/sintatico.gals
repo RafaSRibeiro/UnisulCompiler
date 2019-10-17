@@ -10,11 +10,11 @@ ScannerTable = Full
 Input = Stream
 Parser = LL
 #RegularDefinitions
-//definiÁıes regulares
+//defini√ß√µes regulares
 L  : [A-Za-z]
 D  : [0-9]
 WS : [\ \t\n\r] //simbolos especiais e branco
-COMMENT : "(*" [^ "*" ]* "*)"  //coment·rio
+COMMENT : "(*" [^ "*" ]* "*)"  //coment√°rio
 #Tokens
 //operadores
 "+"
@@ -40,7 +40,7 @@ COMMENT : "(*" [^ "*" ]* "*)"  //coment·rio
 
 //tokens
 IDENT : {L} ( {L} | {D} | _ )*
-INTEIRO : {D}+ //um ou mais dÌgitos
+INTEIRO : {D}+ //um ou mais d√≠gitos
 LITERAL : \"(.)*\"
 
 //palavras chave
@@ -69,7 +69,7 @@ FOR = IDENT : "FOR"
 TO = IDENT : "TO"
 CASE = IDENT : "CASE"
 
-//ignorar espaÁos em branco, caracteres especiais e coment·rios
+//ignorar espa√ßos em branco, caracteres especiais e coment√°rios
  : {WS}*
  :! {COMMENT}
 #NonTerminals
@@ -108,54 +108,54 @@ CASE = IDENT : "CASE"
 <PROGRAMA>   ::=  PROGRAM   IDENT #100 ";"  <BLOCO>   "." #101              ; 
      <BLOCO>      ::= <DCLCONST> <DCLVAR> #102 <DCLPROC><CORPO>       ; 
      <LID>        ::=  IDENT  #104 <REPIDENT>                         ; 
-     <REPIDENT>      ::=   Ó                                                  ; 
+     <REPIDENT>      ::=   √Æ                                                  ; 
      <REPIDENT>      ::=  ","  IDENT #104  <REPIDENT>                               ; 
      <DCLCONST>   ::=  CONST  IDENT #105  "="  INTEIRO #106  ";"  <LDCONST>            ; 
-     <LDCONST>    ::=  Ó                                                ; 
+     <LDCONST>    ::=  √Æ                                                ; 
      <LDCONST>    ::=  IDENT #105 "="  INTEIRO #106 ";"  <LDCONST>                     ; 
-     <DCLCONST>   ::=  Ó                                                  ; 
+     <DCLCONST>   ::=  √Æ                                                  ; 
      <DCLVAR>     ::=  VAR #107 <LID>  ":"  <TIPO>  ";"  <LDVAR>                  ; 
-     <LDVAR>      ::=  Ó                                                  ; 
+     <LDVAR>      ::=  √Æ                                                  ; 
      <LDVAR>      ::= <LID> ":"  <TIPO>  ";"  <LDVAR>                        ; 
-     <DCLVAR>     ::=  Ó                                                  ; 
+     <DCLVAR>     ::=  √Æ                                                  ; 
      <TIPO>       ::=  INTEGER                                       ; 
      <DCLPROC>    ::=  PROCEDURE  IDENT #108 <DEFPAR>  ";" #109 <BLOCO> ";" #110 <DCLPROC> ; 
-     <DCLPROC>    ::=  Ó                                                  ; 
-     <DEFPAR>     ::=  Ó                                                  ; 
+     <DCLPROC>    ::=  √Æ                                                  ; 
+     <DEFPAR>     ::=  √Æ                                                  ; 
      <DEFPAR>     ::=  "(" #111 <LID>  ":"   INTEGER   ")"                     ; 
      <CORPO>      ::=  BEGIN  <COMANDO> <REPCOMANDO>  END                  ; 
-     <REPCOMANDO> ::=  Ó                                                  ; 
+     <REPCOMANDO> ::=  √Æ                                                  ; 
      <REPCOMANDO> ::=  ";"  <COMANDO> <REPCOMANDO>                          ; 
      <COMANDO>    ::= IDENT #114  ":="  <EXPRESSAO>     #115                   ;
      <COMANDO>    ::= <CORPO>                                             ; 
-     <COMANDO>    ::=  Ó                                                  ; 
+     <COMANDO>    ::=  √Æ                                                  ; 
      <COMANDO>    ::=  CALL  IDENT #116 <PARAMETROS>   #117                       ; 
-     <PARAMETROS> ::=  Ó                                                  ; 
+     <PARAMETROS> ::=  √Æ                                                  ; 
      <PARAMETROS> ::=  "("  <EXPRESSAO> #118 <REPPAR>  ")"                         ; 
-     <REPPAR>     ::=  Ó                                                  ; 
+     <REPPAR>     ::=  √Æ                                                  ; 
      <REPPAR>     ::=  ","  <EXPRESSAO>#118 <REPPAR>                            ; 
      <COMANDO>    ::=  IF  <EXPRESSAO> #120  THEN  <COMANDO> <ELSEPARTE> #121      ; 
-     <ELSEPARTE>  ::=  Ó                                                  ; 
+     <ELSEPARTE>  ::=  √Æ                                                  ; 
      <ELSEPARTE>  ::= #122 ELSE   <COMANDO>                                    ; 
      <COMANDO>    ::=  WHILE #123 <EXPRESSAO> #124 DO  <COMANDO> #125                ; 
      <COMANDO>    ::=  REPEAT #126 <COMANDO>  UNTIL  <EXPRESSAO> #127             ; 
      <COMANDO>    ::=  READLN #128  "("  <VARIAVEL> <REPVARIAVEL> ")"                ; 
      <VARIAVEL>   ::=  IDENT  #129                                     ; 
-     <REPVARIAVEL>::= Ó                                                   ; 
+     <REPVARIAVEL>::= √Æ                                                   ; 
      <REPVARIAVEL>::=  ","  <VARIAVEL> <REPVARIAVEL>                        ; 
      <COMANDO>    ::=  WRITELN   "("  <ITEMSAIDA> <REPITEM>  ")"              ; 
      <ITEMSAIDA>  ::= LITERAL #130           ; 
      <ITEMSAIDA>  ::= <EXPRESSAO>   #131                                      ; 
-     <REPITEM>    ::= Ó                                                   ; 
+     <REPITEM>    ::= √Æ                                                   ; 
      <REPITEM>    ::=  ","  <ITEMSAIDA> <REPITEM>                           ; 
      <COMANDO>    ::=  CASE #132 <EXPRESSAO>  OF  <CONDCASE>  END    #133         ; 
      <CONDCASE>   ::= INTEIRO <RPINTEIRO>  ":"  #134 <COMANDO> #135 <CONTCASE>        ; 
      <RPINTEIRO>  ::=  ","  #136 INTEIRO <RPINTEIRO>                             ; 
-     <RPINTEIRO>  ::= Ó       ; 
-     <CONTCASE>   ::= Ó       ; 
+     <RPINTEIRO>  ::= √Æ       ; 
+     <CONTCASE>   ::= √Æ       ; 
      <CONTCASE>   ::=  ";" <CONDCASE>                                      ; 
      <COMANDO>    ::=  FOR  IDENT #137  ":="  <EXPRESSAO> #138  TO  <EXPRESSAO> #139  DO  <COMANDO> #140  ;      <EXPRESSAO>  ::= <EXPSIMP> <REPEXPSIMP>                              ; 
-     <REPEXPSIMP> ::= Ó                                                   ; 
+     <REPEXPSIMP> ::= √Æ                                                   ; 
      <REPEXPSIMP> ::=  "="  <EXPSIMP>      #141                                 ; 
      <REPEXPSIMP> ::=  "<"  <EXPSIMP>     #142                                   ; 
      <REPEXPSIMP> ::=  ">"  <EXPSIMP>     #143                                  ; 
@@ -168,9 +168,9 @@ CASE = IDENT : "CASE"
      <REPEXP>     ::=  "+"  <TERMO> #148 <REPEXP>                                ; 
      <REPEXP>     ::=  "-"  <TERMO> #149 <REPEXP>                                ; 
      <REPEXP>     ::=  OR  <TERMO> #150 <REPEXP>                               ; 
-     <REPEXP>     ::= Ó                                                   ; 
+     <REPEXP>     ::= √Æ                                                   ; 
      <TERMO>      ::= <FATOR> <REPTERMO>                                 ; 
-     <REPTERMO>   ::= Ó                                                   ; 
+     <REPTERMO>   ::= √Æ                                                   ; 
      <REPTERMO>   ::=  "*"  <FATOR> #151 <REPTERMO>                              ; 
      <REPTERMO>   ::=  "/"  <FATOR> #152 <REPTERMO>                             ; 
      <REPTERMO>   ::=  AND  <FATOR> #153 <REPTERMO>                           ; 
