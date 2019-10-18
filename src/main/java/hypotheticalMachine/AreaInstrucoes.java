@@ -9,7 +9,7 @@ package hypotheticalMachine;
  */
 class AreaInstrucoes{
 
-    public Tipos AI[]= new Tipos[1000];
+    public Instruction AI[]= new Instruction[1000];
     public int LC;
 
     /**
@@ -18,7 +18,7 @@ class AreaInstrucoes{
      */
     AreaInstrucoes(){
         for(int i=0; i<1000; i++){
-            AI[i]=new Tipos();
+            AI[i]=new Instruction();
         }
     }
 }
