@@ -9,7 +9,7 @@ import java.util.List;
 public class LexicoAnalyzer {
 
     private String numbers = "0123456789";
-    private String letters = "abcdefghijklmnopqrstuvxwyzABCDEFGHIJKLMNOPQRSTUVXWYZ";
+    private String letters = "abcdefghijklmnopqrstuvxwyzABCDEFGHIJKLMNOPQRSTUVXWYZ_";
     private List<Symbol> symbols;
     private Integer state;
     private StringBuilder buffer;

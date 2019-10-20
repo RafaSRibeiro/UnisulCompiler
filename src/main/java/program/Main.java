@@ -53,6 +53,36 @@ public class Main extends JFrame {
 
         textArea = new TextArea();
         textArea.setBounds(10, 33, 500, 500);
+        textArea.setText("Program ProgramaTrabalho3;\n" +
+                "Const max_nums = 5;\n" +
+                "Var x,res,cont,soma: Integer;\n" +
+                "/* ponto 1 */\n" +
+                "Procedure calcula(y: integer);\n" +
+                " var divisor : integer;\n" +
+                " Procedure divide(a,b: integer);\n" +
+                " begin\n" +
+                " res := a / b;\n" +
+                " end;\n" +
+                " begin\n" +
+                " Writeln(\"Informe o valor do divisor: \");\n" +
+                " Readln(divisor);\n" +
+                " call divide(y,divisor);\n" +
+                " /* ponto 2 */\n" +
+                " end;\n" +
+                "Begin\n" +
+                " Writeln(\"Iniciando programa...\");\n" +
+                " Writeln(\"Informe o valor do dividendo: \");\n" +
+                " Readln(x);\n" +
+                " soma := 0;\n" +
+                "/* ponto 3 */\n" +
+                " for cont := 1 to max_nums do begin\n" +
+                " cont := cont + 1;\n" +
+                " call calcula(x);\n" +
+                " Writeln(\"Resultado do cálculo: \", res);\n" +
+                " soma := soma + res;\n" +
+                " end;\n" +
+                " Writeln(\"Resultado da soma dos cálculos: \", soma);\n" +
+                "End.");
         getContentPane().add(textArea);
 
         Container container = getContentPane();
@@ -68,7 +98,7 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
                 //atribui toda caixa de texto para uma string
-                String entrada = textArea.getText() + " ";
+                String entrada = textArea.getText() + "";
 
                 try {
                     //analisa a entrada com o analizador léxico, convertendo em uma lista de simbolos
