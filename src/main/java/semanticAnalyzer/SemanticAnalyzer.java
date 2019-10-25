@@ -1,6 +1,25 @@
 package semanticAnalyzer;
 
+import hypotheticalMachine.Hipotetica;
+import symbolsTable.SymbolsTable;
+
+import java.util.Stack;
+
 public class SemanticAnalyzer {
+
+     private Stack conditionStack;
+
+     private SymbolsTable symbolsTable;
+
+     private int actualLevel;
+
+     private int freePosition;
+
+     private int variableNumber;
+
+     private int shift;
+
+     private Hipotetica hipotetica;
 
     public void executeAction(int action) {
         switch (action) {
@@ -302,15 +321,17 @@ public class SemanticAnalyzer {
     }
 
     private void action100() {
-        initStacks();
-        initSymbolsTable();
-        initInstructionAreaHypotheticalMachine();
-        initLiteralAreaHypotheticalMachine();
-        initVariables();
+        this.conditionStack = new Stack();
+        this.symbolsTable = new SymbolsTable();
+        this.actualLevel = 0;
+        this.freePosition = 1;
+        this.variableNumber = 0;
+        this.shift = 3;
+        this.hipotetica = new Hipotetica();
     }
 
     private void action102() {
-        // TODO: 10/20/19
+//        this.hipotetica.incluirAI(Hipotetica.AMEM, );
     }
 
     private void action104() {
@@ -333,19 +354,4 @@ public class SemanticAnalyzer {
         // TODO: 10/20/19
     }
 
-    private void initLiteralAreaHypotheticalMachine() {
-        // TODO: 10/20/19
-    }
-
-    private void initInstructionAreaHypotheticalMachine() {
-        // TODO: 10/20/19
-    }
-
-    private void initSymbolsTable() {
-        // TODO: 10/20/19
-    }
-
-    private void initStacks() {
-        // TODO: 10/20/19
-    }
 }

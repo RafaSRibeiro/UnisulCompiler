@@ -8,7 +8,7 @@ package hypotheticalMachine;
 //Atualizada por Charbel Szymanski em 2018B
 
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  * Classe que implementa a máquina hipotética.
@@ -16,10 +16,13 @@ import javax.swing.JOptionPane;
  * e "AreaLiterais" foi criada por Maicon, Reinaldo e Fabio e adaptada
  * para este aplicativo.
  */
-class Hipotetica{
+public class Hipotetica {
 
-    public static int MaxInst=1000;
-    public static int MaxList=30;
+    public static final int AMEM = 24;
+
+
+    public static int MaxInst = 1000;
+    public static int MaxList = 30;
     public static int b; //base do segmento
     public static int topo; //topo da pilha da base de dados
     public static int p; //apontador de instruções
@@ -29,85 +32,55 @@ class Hipotetica{
     public static int k; //segundo operando
     public static int num_impr;
     public static int[] S = new int[1000];
+    private AreaInstrucoes intructionArea;
+    private AreaLiterais instructionliteralarea;
 
     /**
      * Construtor sem parâmetros.
      * Os atributos "nv", "np" e "num_impr" são inicializados com valores padrões.
      */
-    Hipotetica(){
-        num_impr=0;
+    public Hipotetica() {
+        this.instructionliteralarea = new AreaLiterais();
+        this.intructionArea = new AreaInstrucoes();
+
+        num_impr = 0;
     }
 
     /**
      * Inicializa a área de instruções.
      */
-    public static void InicializaAI(AreaInstrucoes areaInstrucoes){
-        for (int i=0;i<MaxInst;i++){ //começava de 1
-            areaInstrucoes.AI[i].codigo=-1;
-            areaInstrucoes.AI[i].op1=-1;
-            areaInstrucoes.AI[i].op2=-1;
+    public static void InicializaAI(AreaInstrucoes areaInstrucoes) {
+        for (int i = 0; i < MaxInst; i++) { //começava de 1
+            areaInstrucoes.AI[i].codigo = -1;
+            areaInstrucoes.AI[i].op1 = -1;
+            areaInstrucoes.AI[i].op2 = -1;
         }
-        areaInstrucoes.LC=0;
+        areaInstrucoes.LC = 0;
     }
 
     /**
      * Inicializa a área de literais
      */
-    public static void InicializaAL(AreaLiterais areaLiterais){
+    public static void InicializaAL(AreaLiterais areaLiterais) {
 
-        for (int i=0;i<MaxList;i++){
-            areaLiterais.AL[i]="";
-            areaLiterais.LIT=0;
+        for (int i = 0; i < MaxList; i++) {
+            areaLiterais.AL[i] = "";
+            areaLiterais.LIT = 0;
         }
-    }
-
-    /**
-     * Inclui uma instrução na área de instruções utilizada pela máquina
-     * hipotética.
-     */
-    public boolean IncluirAI(AreaInstrucoes areaInstrucoes, int c, int o1, int o2) {
-        boolean aux;
-        if(areaInstrucoes.LC>=MaxInst)
-        {
-            aux=false;
-        }
-        else
-        {
-            aux=true;
-            areaInstrucoes.AI[areaInstrucoes.LC].codigo=c;
-
-            if(o1 != -1)
-            {
-                areaInstrucoes.AI[areaInstrucoes.LC].op1=o1;
-            }
-
-            if(c==24)
-            {
-                areaInstrucoes.AI[areaInstrucoes.LC].op2=o2;
-            }
-
-            if(o2!=-1)
-            {
-                areaInstrucoes.AI[areaInstrucoes.LC].op2=o2;
-            }
-
-            areaInstrucoes.LC=areaInstrucoes.LC+1;
-        }
-        return aux;
     }
 
     /**
      * Altera uma instrução da área de instruções utilizada pela máquina
      * hipotética.
      */
-    public static void AlterarAI(AreaInstrucoes areaInstrucoes, int s, int o1, int o2){
+    public static void AlterarAI(AreaInstrucoes areaInstrucoes, int s, int o1, int o2) {
 
-        if (o1!=-1){
-            areaInstrucoes.AI[s].op1=o1;
+        if (o1 != -1) {
+            areaInstrucoes.AI[s].op1 = o1;
         }
 
-        if(o2!=-1){
-            areaInstrucoes.AI[s].op2=o2;
+        if (o2 != -1) {
+            areaInstrucoes.AI[s].op2 = o2;
         }
     }
 
@@ -115,14 +88,14 @@ class Hipotetica{
      * Inclui um literal na área de literais utilizada pela máquina
      * hipotética.
      */
-    public static boolean IncluirAL(AreaLiterais areaLiterais, String literal){
+    public static boolean IncluirAL(AreaLiterais areaLiterais, String literal) {
         boolean aux;
-        if (areaLiterais.LIT>=MaxList){
-            aux=false;
-        }else{
-            aux=true;
-            areaLiterais.AL[areaLiterais.LIT]=literal;
-            areaLiterais.LIT=areaLiterais.LIT+1;
+        if (areaLiterais.LIT >= MaxList) {
+            aux = false;
+        } else {
+            aux = true;
+            areaLiterais.AL[areaLiterais.LIT] = literal;
+            areaLiterais.LIT = areaLiterais.LIT + 1;
         }
         return aux;
     }
@@ -130,12 +103,12 @@ class Hipotetica{
     /**
      * Utilizada para determinar a base.
      */
-    public static int Base(){
+    public static int Base() {
         int b1;
-        b1=b;
-        while(l>0){
-            b1=S[b1];
-            l=l-1;
+        b1 = b;
+        while (l > 0) {
+            b1 = S[b1];
+            l = l - 1;
         }
         return b1;
     }
@@ -143,202 +116,201 @@ class Hipotetica{
     /**
      * Responsável por interpretar as instruções.
      */
-    public static void Interpreta(AreaInstrucoes areaInstrucoes, AreaLiterais areaLiterais){
+    public static void Interpreta(AreaInstrucoes areaInstrucoes, AreaLiterais areaLiterais) {
 
-        topo=0;
-        b=0; //registrador base
-        p=0; //aponta próxima instrução
-        S[1]=0; //SL
-        S[2]=0; //DL
-        S[3]=0; //RA
-        operador=0;
+        topo = 0;
+        b = 0; //registrador base
+        p = 0; //aponta próxima instrução
+        S[1] = 0; //SL
+        S[2] = 0; //DL
+        S[3] = 0; //RA
+        operador = 0;
 
         String leitura;
 
         while (operador != 26) {//Enquanto instrução diferente de PARE
 
-            operador=areaInstrucoes.AI[p].codigo;
+            operador = areaInstrucoes.AI[p].codigo;
 
 
-            l=areaInstrucoes.AI[p].op1;
-            a=areaInstrucoes.AI[p].op2;
-            p=p+1;
+            l = areaInstrucoes.AI[p].op1;
+            a = areaInstrucoes.AI[p].op2;
+            p = p + 1;
 
-            switch (operador){
+            switch (operador) {
                 case 1://RETU
-                    p=S[b+2];
-                    topo=b-a-1; //a = nº de parâmetros
-                    b=S[b+1];
+                    p = S[b + 2];
+                    topo = b - a - 1; //a = nº de parâmetros
+                    b = S[b + 1];
                     break;
 
                 case 2://CRVL
-                    topo=topo+1;
-                    S[topo]=S[Base()+a];
+                    topo = topo + 1;
+                    S[topo] = S[Base() + a];
                     break;
 
                 case 3: //CRCT
-                    topo=topo+1;
-                    S[topo]=a;
+                    topo = topo + 1;
+                    S[topo] = a;
                     break;
 
                 case 4://ARMZ
-                    S[Base()+a]=S[topo];
-                    topo=topo-1;
+                    S[Base() + a] = S[topo];
+                    topo = topo - 1;
                     break;
 
                 case 5://SOMA
-                    S[topo-1]=S[topo-1]+S[topo];
-                    topo=topo-1;
+                    S[topo - 1] = S[topo - 1] + S[topo];
+                    topo = topo - 1;
                     break;
 
                 case 6://SUBT
-                    S[topo-1]=S[topo-1]-S[topo];
-                    topo=topo-1;
+                    S[topo - 1] = S[topo - 1] - S[topo];
+                    topo = topo - 1;
                     break;
 
                 case 7://MULT
-                    S[topo-1]=S[topo-1]*S[topo];
-                    topo=topo-1;
+                    S[topo - 1] = S[topo - 1] * S[topo];
+                    topo = topo - 1;
                     break;
 
                 case 8: //DIVI
-                    if (S[topo]==0){
-                        JOptionPane.showMessageDialog(null,"Divisão por zero.","Erro durante a execução",JOptionPane.ERROR_MESSAGE);
-                        S[topo-1]=S[topo-1] / S[topo];
-                        topo=topo-1;
+                    if (S[topo] == 0) {
+                        JOptionPane.showMessageDialog(null, "Divisão por zero.", "Erro durante a execução", JOptionPane.ERROR_MESSAGE);
+                        S[topo - 1] = S[topo - 1] / S[topo];
+                        topo = topo - 1;
                     }
                     break;
 
                 case 9://INVR
-                    S[topo]=-S[topo];
+                    S[topo] = -S[topo];
                     break;
 
                 case 10: //NEGA
-                    S[topo]=1-S[topo];
+                    S[topo] = 1 - S[topo];
                     break;
 
                 case 11://CONJ
-                    if((S[topo-1]==1)&&(S[topo]==1)){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if ((S[topo - 1] == 1) && (S[topo] == 1)) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 12://DISJ
-                    if((S[topo-1]==1||S[topo]==1)){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if ((S[topo - 1] == 1 || S[topo] == 1)) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 13://CMME
-                    if(S[topo-1]<S[topo]){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if (S[topo - 1] < S[topo]) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 14://CMMA
-                    if(S[topo-1]>S[topo]){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if (S[topo - 1] > S[topo]) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 15://CMIG
-                    if(S[topo-1]==S[topo]){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if (S[topo - 1] == S[topo]) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 16://CMDF
-                    if(S[topo-1]!=S[topo]){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if (S[topo - 1] != S[topo]) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 17://CMEI
-                    if(S[topo-1]<=S[topo]){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if (S[topo - 1] <= S[topo]) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 18://CMAI
-                    if(S[topo-1]>=S[topo]){
-                        S[topo-1]=1;
-                    }else{
-                        S[topo-1]=0;
+                    if (S[topo - 1] >= S[topo]) {
+                        S[topo - 1] = 1;
+                    } else {
+                        S[topo - 1] = 0;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 19://DSVS
-                    p=a;
+                    p = a;
                     break;
 
                 case 20://DSVF
-                    if (S[topo]==0){
-                        p=a;
+                    if (S[topo] == 0) {
+                        p = a;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
 
                     break;
 
                 case 21://LEIT
-                    topo=topo+1;
-                    leitura = JOptionPane.showInputDialog(null,"Informe o valor:","Leitura",JOptionPane.QUESTION_MESSAGE);
+                    topo = topo + 1;
+                    leitura = JOptionPane.showInputDialog(null, "Informe o valor:", "Leitura", JOptionPane.QUESTION_MESSAGE);
                     //System.out.print("Leia: "); A
-                    (S[topo])=Integer.parseInt(leitura); //problema aqui A
+                    (S[topo]) = Integer.parseInt(leitura); //problema aqui A
                     break;
 
                 case 22://IMPR
-                    JOptionPane.showMessageDialog(null,"" + S[topo],"Informação",JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "" + S[topo], "Informação", JOptionPane.INFORMATION_MESSAGE);
                     //System.out.println(S[topo]); A
-                    topo=topo-1;
+                    topo = topo - 1;
                     break;
 
                 case 23://IMPRLIT
-                    if (a>= areaLiterais.LIT)
-                    {
-                        JOptionPane.showMessageDialog(null,"Literal não encontrado na área dos literais.","Erro durante a execução",JOptionPane.ERROR_MESSAGE);
+                    if (a >= areaLiterais.LIT) {
+                        JOptionPane.showMessageDialog(null, "Literal não encontrado na área dos literais.", "Erro durante a execução", JOptionPane.ERROR_MESSAGE);
                         //System.out.println("ERRO >> Literal nao encontrada na area"); A
-                    }else{
-                        JOptionPane.showMessageDialog(null,"" + areaLiterais.AL[a],"Informação",JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "" + areaLiterais.AL[a], "Informação", JOptionPane.INFORMATION_MESSAGE);
                         //System.out.println(AL.AL[a]); A
                         //AL.LIT++;
                     }
                     break;
 
                 case 24://AMEM
-                    topo=topo+a;
+                    topo = topo + a;
                     break;
 
                 case 25://CALL
-                    int base =Base();
+                    int base = Base();
                     //System.out.println("chamando CALL");
                     //System.out.println("topo+1=" + (topo+1) + " -> " + base);
-                    S[topo+1]=base;
-                    S[topo+2]=b;
-                    S[topo+3]=p;
-                    b=topo+1;
-                    p=a;
+                    S[topo + 1] = base;
+                    S[topo + 2] = b;
+                    S[topo + 3] = p;
+                    b = topo + 1;
+                    p = a;
                     break;
 
                 case 26:
@@ -351,23 +323,52 @@ class Hipotetica{
                     break;
 
                 case 28://COPI
-                    topo=topo+1;
-                    S[topo]=S[topo-1];
+                    topo = topo + 1;
+                    S[topo] = S[topo - 1];
                     break;
 
                 case 29://DSVT
-                    if(S[topo]==1){
-                        p=a;
+                    if (S[topo] == 1) {
+                        p = a;
                     }
-                    topo=topo-1;
+                    topo = topo - 1;
             }//fim do case
         }//fim do while
     }//fim do procedimento interpreta
 
     private static void mostraAreaDados() {
-        for (int i=topo; i>=0; i--) {
-            System.out.println(i+"["+S[i]+"]");
+        for (int i = topo; i >= 0; i--) {
+            System.out.println(i + "[" + S[i] + "]");
         }
+    }
+
+    /**
+     * Inclui uma instrução na área de instruções utilizada pela máquina
+     * hipotética.
+     */
+    public boolean incluirAI(int c, int o1, int o2) {
+        boolean aux;
+        if (this.intructionArea.LC >= MaxInst) {
+            aux = false;
+        } else {
+            aux = true;
+            this.intructionArea.AI[this.intructionArea.LC].codigo = c;
+
+            if (o1 != -1) {
+                this.intructionArea.AI[this.intructionArea.LC].op1 = o1;
+            }
+
+            if (c == 24) {
+                this.intructionArea.AI[this.intructionArea.LC].op2 = o2;
+            }
+
+            if (o2 != -1) {
+                this.intructionArea.AI[this.intructionArea.LC].op2 = o2;
+            }
+
+            this.intructionArea.LC = this.intructionArea.LC + 1;
+        }
+        return aux;
     }
 }
 

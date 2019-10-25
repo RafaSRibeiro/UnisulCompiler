@@ -7,18 +7,21 @@ package hypotheticalMachine;
  * e "Hipotetica" foi criada por Maicon, Reinaldo e Fabio e adaptada
  * para este aplicativo.
  */
-class AreaInstrucoes{
+public class AreaInstrucoes {
 
-    public Instruction AI[]= new Instruction[1000];
+    public Instruction AI[] = new Instruction[1000];
+
     public int LC;
 
     /**
      * Construtor sem parâmetros.
      * Todos os atributos são inicializados com valores padrões.
      */
-    AreaInstrucoes(){
-        for(int i=0; i<1000; i++){
-            AI[i]=new Instruction();
+    public AreaInstrucoes() {
+        for (int i = 0; i < 1000; i++) {
+            AI[i] = new Instruction();
         }
+
+        this.LC = 0;
     }
 }
