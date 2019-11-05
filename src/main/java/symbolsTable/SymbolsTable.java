@@ -10,7 +10,9 @@ public class SymbolsTable {
         inithashTable();
     }
 
-    public void add(Symbol symbol) {
+    public void add(Symbol symbol) throws SymbolDeclaredException {
+        if (exists(symbol))
+            throw new SymbolDeclaredException();
         int index = this.hash(symbol.name, tableSize);
         if (hashtable[index] == null) {
             hashtable[index] = symbol;
@@ -78,7 +80,26 @@ public class SymbolsTable {
         }
     }
 
-    public Symbol find(Symbol symbol) throws ClassNotFoundException {
+    public boolean exists(Symbol symbol) {
+        int index = this.hash(symbol.name, tableSize);
+        if (hashtable[index] != null) {
+            Symbol symbolLinked = hashtable[index];
+            if (symbolLinked == symbol)
+                return true;
+            while (symbolLinked.next != null) {
+                symbolLinked = symbolLinked.next;
+                if (symbolLinked == symbol)
+                    return true;
+            }
+            if (symbolLinked.next == null)
+                return false;
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    public Symbol find(Symbol symbol) throws SymbolNotFoundException {
         int index = this.hash(symbol.name, tableSize);
         if (hashtable[index] != null) {
             Symbol symbolLinked = hashtable[index];
@@ -90,9 +111,9 @@ public class SymbolsTable {
                     return symbolLinked;
             }
             if (symbolLinked.next == null)
-                throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
+                throw new SymbolNotFoundException("Símbolo " + symbol.name + " não existe");
         } else {
-            throw new ClassNotFoundException("Símbolo " + symbol.name + " não existe");
+            throw new SymbolNotFoundException("Símbolo " + symbol.name + " não existe");
         }
         return symbol;
     }

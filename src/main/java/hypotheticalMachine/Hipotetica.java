@@ -18,9 +18,6 @@ import javax.swing.*;
  */
 public class Hipotetica {
 
-    public static final int AMEM = 24;
-
-
     public static int MaxInst = 1000;
     public static int MaxList = 30;
     public static int b; //base do segmento
@@ -32,8 +29,8 @@ public class Hipotetica {
     public static int k; //segundo operando
     public static int num_impr;
     public static int[] S = new int[1000];
-    private AreaInstrucoes intructionArea;
-    private AreaLiterais instructionliteralarea;
+    public InstructionArea intructionArea;
+    public AreaLiterais instructionliteralarea;
 
     /**
      * Construtor sem parâmetros.
@@ -41,7 +38,7 @@ public class Hipotetica {
      */
     public Hipotetica() {
         this.instructionliteralarea = new AreaLiterais();
-        this.intructionArea = new AreaInstrucoes();
+        this.intructionArea = new InstructionArea();
 
         num_impr = 0;
     }
@@ -49,13 +46,13 @@ public class Hipotetica {
     /**
      * Inicializa a área de instruções.
      */
-    public static void InicializaAI(AreaInstrucoes areaInstrucoes) {
+    public static void InicializaAI(InstructionArea instructionArea) {
         for (int i = 0; i < MaxInst; i++) { //começava de 1
-            areaInstrucoes.AI[i].codigo = -1;
-            areaInstrucoes.AI[i].op1 = -1;
-            areaInstrucoes.AI[i].op2 = -1;
+            instructionArea.instructions[i].codigo = -1;
+            instructionArea.instructions[i].op1 = -1;
+            instructionArea.instructions[i].op2 = -1;
         }
-        areaInstrucoes.LC = 0;
+        instructionArea.LC = 0;
     }
 
     /**
@@ -73,14 +70,14 @@ public class Hipotetica {
      * Altera uma instrução da área de instruções utilizada pela máquina
      * hipotética.
      */
-    public static void AlterarAI(AreaInstrucoes areaInstrucoes, int s, int o1, int o2) {
+    public static void AlterarAI(InstructionArea instructionArea, int s, int o1, int o2) {
 
         if (o1 != -1) {
-            areaInstrucoes.AI[s].op1 = o1;
+            instructionArea.instructions[s].op1 = o1;
         }
 
         if (o2 != -1) {
-            areaInstrucoes.AI[s].op2 = o2;
+            instructionArea.instructions[s].op2 = o2;
         }
     }
 
@@ -116,7 +113,7 @@ public class Hipotetica {
     /**
      * Responsável por interpretar as instruções.
      */
-    public static void Interpreta(AreaInstrucoes areaInstrucoes, AreaLiterais areaLiterais) {
+    public static void Interpreta(InstructionArea instructionArea, AreaLiterais areaLiterais) {
 
         topo = 0;
         b = 0; //registrador base
@@ -130,11 +127,11 @@ public class Hipotetica {
 
         while (operador != 26) {//Enquanto instrução diferente de PARE
 
-            operador = areaInstrucoes.AI[p].codigo;
+            operador = instructionArea.instructions[p].codigo;
 
 
-            l = areaInstrucoes.AI[p].op1;
-            a = areaInstrucoes.AI[p].op2;
+            l = instructionArea.instructions[p].op1;
+            a = instructionArea.instructions[p].op2;
             p = p + 1;
 
             switch (operador) {
@@ -298,7 +295,7 @@ public class Hipotetica {
                     }
                     break;
 
-                case 24://AMEM
+                case InstructionArea.AMEM://AMEM
                     topo = topo + a;
                     break;
 
@@ -346,24 +343,24 @@ public class Hipotetica {
      * Inclui uma instrução na área de instruções utilizada pela máquina
      * hipotética.
      */
-    public boolean incluirAI(int c, int o1, int o2) {
+    public boolean addInstruction(int c, int o1, int o2) {
         boolean aux;
         if (this.intructionArea.LC >= MaxInst) {
             aux = false;
         } else {
             aux = true;
-            this.intructionArea.AI[this.intructionArea.LC].codigo = c;
+            this.intructionArea.instructions[this.intructionArea.LC].codigo = c;
 
             if (o1 != -1) {
-                this.intructionArea.AI[this.intructionArea.LC].op1 = o1;
+                this.intructionArea.instructions[this.intructionArea.LC].op1 = o1;
             }
 
             if (c == 24) {
-                this.intructionArea.AI[this.intructionArea.LC].op2 = o2;
+                this.intructionArea.instructions[this.intructionArea.LC].op2 = o2;
             }
 
             if (o2 != -1) {
-                this.intructionArea.AI[this.intructionArea.LC].op2 = o2;
+                this.intructionArea.instructions[this.intructionArea.LC].op2 = o2;
             }
 
             this.intructionArea.LC = this.intructionArea.LC + 1;

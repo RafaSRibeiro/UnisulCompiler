@@ -17,9 +17,36 @@ public class Instruction {
      * Construtor sem parâmetros.
      * Todos os atributos são inicializados com valores padrões.
      */
-    Instruction() {
+    public Instruction() {
         codigo = 0;
         op1 = 0;
         op2 = 0;
+    }
+
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public Instruction setCodigo(int codigo) {
+        this.codigo = codigo;
+        return this;
+    }
+
+    public int getOp1() {
+        return op1;
+    }
+
+    public Instruction setOp1(int op1) {
+        this.op1 = op1;
+        return this;
+    }
+
+    public int getOp2() {
+        return op2;
+    }
+
+    public Instruction setOp2(int op2) {
+        this.op2 = op2;
+        return this;
     }
 }

@@ -36,6 +36,7 @@ public class SyntacticAnalyzer {
 
             //se o simbolo atual, topo da pilha da simbolos, for TERMINAL
             if (isTerminal(currentAuxToken) || auxStack.empty()) {
+                semanticAnalyzer.lastNonTerminalSymbol = currentToken;
                 //se os simbolos das pilhas de simbolos e de entrada coincidirem, desempilha o simbolo das duas
                 if (currentAuxToken == currentToken.getId()) {
                     auxStack.pop();

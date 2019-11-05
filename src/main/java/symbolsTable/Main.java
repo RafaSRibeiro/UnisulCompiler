@@ -18,16 +18,16 @@ public class Main {
 
 //        Adiciona Symbolos
         SymbolsTable symbolTable = new SymbolsTable();
-        symbolTable.add(symbol1);
-        symbolTable.add(symbol2);
-        symbolTable.add(symbol3);
-        symbolTable.add(symbol4);
-        symbolTable.add(symbol5);
-        symbolTable.add(symbol6);
-        symbolTable.add(symbol7);
-        symbolTable.add(symbol8);
-        symbolTable.add(symbol9);
-        symbolTable.add(symbol10);
+//        symbolTable.add(symbol1);
+//        symbolTable.add(symbol2);
+//        symbolTable.add(symbol3);
+//        symbolTable.add(symbol4);
+//        symbolTable.add(symbol5);
+//        symbolTable.add(symbol6);
+//        symbolTable.add(symbol7);
+//        symbolTable.add(symbol8);
+//        symbolTable.add(symbol9);
+//        symbolTable.add(symbol10);
         System.out.println("Símbolos adicionados");
         symbolTable.printSymbolTable();
 

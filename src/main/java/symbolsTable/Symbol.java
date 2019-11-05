@@ -2,10 +2,11 @@ package symbolsTable;
 
 public class Symbol {
 
-    private static final int VARIAVEL = 1;
-    private static final int CONSTANTE = 2;
-    private static final int PROCEDURE = 3;
-    private static final int PARAMETRO = 4;
+    public static final int VARIAVEL = 1;
+    public static final int CONSTANTE = 2;
+    public static final int PROCEDURE = 3;
+    public static final int PARAMETRO = 4;
+    public static final int ROTULO = 5;
 
     public String name;
 

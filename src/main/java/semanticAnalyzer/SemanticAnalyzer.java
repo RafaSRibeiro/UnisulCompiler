@@ -1,6 +1,10 @@
 package semanticAnalyzer;
 
 import hypotheticalMachine.Hipotetica;
+import hypotheticalMachine.InstructionArea;
+import symbolsTable.Symbol;
+import symbolsTable.SymbolDeclaredException;
+import symbolsTable.SymbolNotFoundException;
 import symbolsTable.SymbolsTable;
 
 import java.util.Stack;
@@ -15,11 +19,23 @@ public class SemanticAnalyzer {
 
      private int freePosition;
 
-     private int variableNumber;
+    private int variableNumber;
 
-     private int shift;
+    private int parameterNumber;
 
-     private Hipotetica hipotetica;
+    private int shift;
+
+    private boolean hasParameters = false;
+
+    private Hipotetica hipotetica;
+
+    public int identificatorType;
+
+    public lexicoAnalyzer.Symbol lastNonTerminalSymbol;
+
+    public SemanticAnalyzer() {
+        this.symbolsTable = new SymbolsTable();
+    }
 
     public void executeAction(int action) {
         switch (action) {
@@ -33,7 +49,11 @@ public class SemanticAnalyzer {
                 action104();
                 break;
             case 105:
-                action105();
+                try {
+                    action105();
+                } catch (SymbolDeclaredException e) {
+
+                }
                 break;
             case 106:
                 action106();
@@ -303,21 +323,45 @@ public class SemanticAnalyzer {
     }
 
     private void action115() {
+        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, actualLevel);
     }
 
     private void action114() {
     }
 
     private void action111() {
+        this.identificatorType = Symbol.PARAMETRO;
+        this.hasParameters = true;
     }
 
     private void action110() {
     }
 
     private void action109() {
+        if (this.hasParameters) {
+            try {
+                Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, 0, 0);
+                Symbol symbol = symbolsTable.find(newSymbol);
+                symbol.generalB = this.parameterNumber;
+                // TODO: 11/5/19 preenche atributos dos parâmetros (deslocamento):
+                //primeiro parâmetro –> deslocamento = - (np)
+                //segundo parâmetro –> deslocamento = - (np – 1)
+            } catch (SymbolNotFoundException e) {
+            }
+        }
+        // TODO: 11/5/19 gera instrução DSVS com parâmetro zero, e salva na pilha de controle de desvios de
+        //procedure o endereço da instrução de desvio e o número de parâmetros.
     }
 
     private void action108() {
+        try {
+            Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, 0, 0);
+            symbolsTable.add(newSymbol);
+        } catch (SymbolDeclaredException e) {
+        }
+        this.hasParameters = false;
+        this.parameterNumber = 0;
+        this.actualLevel++;
     }
 
     private void action100() {
@@ -326,28 +370,60 @@ public class SemanticAnalyzer {
         this.actualLevel = 0;
         this.freePosition = 1;
         this.variableNumber = 0;
+        this.parameterNumber = 0;
         this.shift = 3;
         this.hipotetica = new Hipotetica();
     }
 
     private void action102() {
-//        this.hipotetica.incluirAI(Hipotetica.AMEM, );
+        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, variableNumber);
     }
 
     private void action104() {
-        // TODO: 10/20/19
+        switch (this.identificatorType) {
+            case Symbol.ROTULO:
+                try {
+                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.ROTULO, this.actualLevel, 0, 0);
+                    symbolsTable.add(newSymbol);
+                    // TODO: 11/5/19 cabeça de lista de referências futuras = 0
+                } catch (SymbolDeclaredException e) {
+                }
+                break;
+            case Symbol.VARIAVEL:
+                try {
+                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, this.actualLevel, 0, 0);
+                    symbolsTable.add(newSymbol);
+                    this.variableNumber++;
+                } catch (SymbolDeclaredException e) {
+                }
+                break;
+            case Symbol.PARAMETRO:
+                try {
+                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PARAMETRO, this.actualLevel, 0, 0);
+                    symbolsTable.add(newSymbol);
+                    this.parameterNumber++;
+                } catch (SymbolDeclaredException e) {
+                }
+                break;
+        }
     }
 
-    private void action105() {
-        // TODO: 10/20/19
+    private void action105() throws SymbolDeclaredException {
+        Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.CONSTANTE, this.actualLevel, 0, 0);
+        if (!this.symbolsTable.exists(newSymbol)) {
+            this.symbolsTable.add(newSymbol);
+        } else {
+            throw new SymbolDeclaredException();
+        }
     }
 
     private void action106() {
-        // TODO: 10/20/19
+        // TODO: 10/20/19 preenche atributo para constante na TS (valor base 10), utilizando endereço do
+        //identificador na TS salvo em ação #105
     }
 
     private void action107() {
-        // TODO: 10/20/19
+        this.identificatorType = Symbol.VARIAVEL;
     }
 
     private void initVariables() {
