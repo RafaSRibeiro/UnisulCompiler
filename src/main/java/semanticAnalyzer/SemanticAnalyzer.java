@@ -271,7 +271,14 @@ public class SemanticAnalyzer {
     }
 
     private void action140() {
-        System.out.print("TODO");
+        // TODO: 11/7/19 Após comando em FOR
+        // gera instrução CRVL, utilizando endereço salvo em #139( @ da TS da variável de controle
+        //na pilha de controle)
+        // gera instrução CRCT (1) base 10
+        // gera instrução soma (até aqui incrementa variável de controle)
+        // gera instrução ARMZ variável controle
+        // completa instrução DSVF, gerada na ação #139, utilizando como operando (LC+1)
+        // gera instruçao DSVS, utilizando como operando o valor de LC salvo na ação #139 (retorno) gera instrução AMEN, -1 (limpeza)
     }
 
     private void action139() {
@@ -320,7 +327,8 @@ public class SemanticAnalyzer {
     }
 
     private void action131() {
-        System.out.print("TODO");
+        // TODO: 11/7/19 WRITELN após expressão
+        // gera IMPR
     }
 
     private void action130() {
