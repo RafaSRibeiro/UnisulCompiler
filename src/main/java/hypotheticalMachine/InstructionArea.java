@@ -10,6 +10,7 @@ package hypotheticalMachine;
 public class InstructionArea {
 
     public static final int AMEM = 24;
+    public static final int PARA = 26;
     public static final int CRCT = 3;
 
     public Instruction instructions[] = new Instruction[1000];

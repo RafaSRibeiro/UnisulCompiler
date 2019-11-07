@@ -47,6 +47,9 @@ public class SemanticAnalyzer {
             case 100:
                 action100();
                 break;
+            case 101:
+                action101();
+                break;
             case 102:
                 action102();
                 break;
@@ -201,6 +204,12 @@ public class SemanticAnalyzer {
                 action156();
                 break;
         }
+    }
+
+    private void action101() {
+        this.hipotetica.addInstruction(InstructionArea.PARA, 0, 0);
+        // TODO: 11/7/19
+        // Verifica utilização de rótulos através da tabela de símbolos
     }
 
     private void action156() {
@@ -433,7 +442,7 @@ public class SemanticAnalyzer {
     }
 
     private void action115() {
-        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, actualLevel);
+        // TODO: 11/7/19
     }
 
     private void action114() {
