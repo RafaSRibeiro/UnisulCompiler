@@ -38,6 +38,8 @@ public class SemanticAnalyzer {
 
     private int context;
 
+    private Symbol lastSymbol;
+
     public SemanticAnalyzer() {
         this.symbolsTable = new SymbolsTable();
     }
@@ -548,13 +550,13 @@ public class SemanticAnalyzer {
         Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.CONSTANTE, this.actualLevel, 0, 0);
         try {
             this.symbolsTable.add(newSymbol);
+            lastSymbol = newSymbol;
         } catch (SymbolDeclaredException e) {
         }
     }
 
     private void action106() {
-        // TODO: 10/20/19 preenche atributo para constante na TS (valor base 10), utilizando endereço do
-        //identificador na TS salvo em ação #105
+        lastSymbol.generalA = Integer.parseInt(lastNonTerminalSymbol.getToken());
     }
 
     private void action107() {
