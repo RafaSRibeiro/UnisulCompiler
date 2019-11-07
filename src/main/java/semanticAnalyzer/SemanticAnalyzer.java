@@ -11,6 +11,9 @@ import java.util.Stack;
 
 public class SemanticAnalyzer {
 
+    private static final int CONTEXT_EXPRESSAO = 1;
+    private static final int CONTEXT_READLN = 2;
+
      private Stack conditionStack;
 
      private SymbolsTable symbolsTable;
@@ -33,6 +36,8 @@ public class SemanticAnalyzer {
 
     public lexicoAnalyzer.Symbol lastNonTerminalSymbol;
 
+    private int context;
+
     public SemanticAnalyzer() {
         this.symbolsTable = new SymbolsTable();
     }
@@ -49,11 +54,7 @@ public class SemanticAnalyzer {
                 action104();
                 break;
             case 105:
-                try {
-                    action105();
-                } catch (SymbolDeclaredException e) {
-
-                }
+                action105();
                 break;
             case 106:
                 action106();
@@ -203,123 +204,224 @@ public class SemanticAnalyzer {
     }
 
     private void action156() {
+        this.context = CONTEXT_EXPRESSAO;
     }
 
     private void action155() {
+        System.out.print("TODO");
     }
 
     private void action154() {
+        // TODO: 11/7/19 Expressão – inteiro
+        // gera CRCT 
     }
 
     private void action153() {
+        System.out.print("TODO");
     }
 
     private void action152() {
+        // TODO: 11/7/19 Expressão – divisão
+        // gera DIV 
     }
 
     private void action151() {
+        System.out.print("TODO");
     }
 
     private void action150() {
+        System.out.print("TODO");
     }
 
     private void action149() {
+        System.out.print("TODO");
     }
 
     private void action148() {
+        // TODO: 11/7/19 Expressão – subtração
+        // gera SUBT 
     }
 
     private void action147() {
+        System.out.print("TODO");
     }
 
     private void action146() {
+        System.out.print("TODO");
     }
 
     private void action145() {
+        System.out.print("TODO");
     }
 
     private void action144() {
+        System.out.print("TODO");
     }
 
     private void action143() {
+        System.out.print("TODO");
     }
 
     private void action142() {
+        System.out.print("TODO");
     }
 
     private void action141() {
+        System.out.print("TODO");
     }
 
     private void action140() {
+        System.out.print("TODO");
     }
 
     private void action139() {
+        // TODO: 11/7/19 Após expressão – valor final
+        // armazena valor de LC na pilha de controle do FOR
+        // gera instrução COPIA
+        // gera instrução CRVL – atributos salvos em #137
+        // gera instrução CMAI
+        // gera instrução DSVF com parâmetro desconhecido, guardando na pilha de controle o
+        //endereço do operando (ou da instrução) para posterior marcação.
+        // armazena na pilha de controle o endereço do nome da variável de controle relativo à
+        //tabela de símbolos. 
     }
 
     private void action138() {
+        // TODO: 11/7/19 Após expressão valor inicial
+        // gera instrução ARMZ – considerando variável de controle atributos salvos em #137) 
     }
 
     private void action137() {
+        // TODO: 11/7/19 Após variável controle comando FOR
+        //se nome esta na TS e é nome da variável então
+        //salva endereço do nome em relação a TS
+        //senão erro
+        //fim se 
     }
 
     private void action136() {
+        System.out.print("TODO");
     }
 
     private void action135() {
+        System.out.print("TODO");
     }
 
     private void action134() {
+        System.out.print("TODO");
     }
 
     private void action133() {
+        System.out.print("TODO");
     }
 
     private void action132() {
+        System.out.print("TODO");
     }
 
     private void action131() {
+        System.out.print("TODO");
     }
 
     private void action130() {
+        // TODO: 11/7/19 WRITELN - após literal na instrução WRITELN
+        // armazena cadeia literal na área de literais (pega o literal identificado pelo léxico e
+        //transposta para área de literais – área_literais)
+        // atualiza ponteiro de literal ( pont_literal – vetor que aponta para o inicio do literal
+        //respectivo na área de literais) - aponta para o inicio do proximo literal.
+        // gera IMPRLIT tendo como parâmetro o numero de ordem do literal ( literal 1, literal 2
+        //...)
+        // incrementa no. de ordem do literal
+        //Nota : a área de literais (área_literais) e o ponteiro de literais (pont_literal) são gerados na fase
+        //de compilação e utilizados na fase de interpretação (execução) do programa. 
     }
 
     private void action129() {
+        switch (this.context) {
+            case CONTEXT_READLN:
+                // TODO: 11/7/19 se identificador é nome de variável e está na tabela de símbolos então
+                //gera LEIT
+                //gera ARMZ
+                //senão erro
+                //fim se
+                break;
+            case CONTEXT_EXPRESSAO:
+                // TODO: 11/7/19 se nome não está na tabela de símbolos
+                //então erro
+                //senão
+                //se nome é de procedure ou de rótulo
+                //então erro
+                //senão se nome é de constante
+                //então gera CRCT valor decimal
+                //senão gera CRVL - , deslocamento
+                //fim se
+                //fim se
+                //fim se
+                break;
+        }
     }
 
     private void action128() {
+        this.context = CONTEXT_READLN;
     }
 
     private void action127() {
+        System.out.print("TODO");
     }
 
     private void action126() {
+        System.out.print("TODO");
     }
 
     private void action125() {
+        System.out.print("TODO");
     }
 
     private void action124() {
+        System.out.print("TODO");
     }
 
     private void action123() {
+        // TODO: 11/7/19 Comando WHILE antes da expressão
+        // o valor de LC é armazenado na pilha dos WHILE’s, este é o endereço de retorno do
+        //WHILE 
     }
 
     private void action122() {
+        System.out.print("TODO");
     }
 
     private void action121() {
+        // TODO: 11/7/19 Após instrução IF
+        // completa instrução DSVS gerada na ação #122
+        // operando recebe valor de LC 
     }
 
     private void action120() {
+        System.out.print("TODO");
     }
 
     private void action118() {
+        // TODO: 11/7/19 Após expressão, em comando call
+        // acumula número de parâmetros efetivos 
     }
 
     private void action117() {
+        // TODO: 11/7/19 Após comando call
+        //se num. de parâmetros <> num. de parâmetros efetivos
+        //então erro
+        //senão
+        //gera instrução CALL, utilizando informaçoes da procedure, contidas na TS (
+        //endereço na TS salvo em ação #116)
+        //fim se 
     }
 
     private void action116() {
+        // TODO: 11/7/19 Chamada de procedure
+        //se nome esta na TS e é nome de procedure
+        //então salva endereço do nome
+        //senão erro
+        //fim se 
     }
 
     private void action115() {
@@ -327,6 +429,13 @@ public class SemanticAnalyzer {
     }
 
     private void action114() {
+        // TODO: 11/7/19 Atribuição parte esquerda
+        //se nome está na tabela de símbolos então
+        //se nome <> nome de variável então erro
+        //senão salva atributos do nome
+        //fim se
+        //senão erro (“identificador não declarado”)
+        //fim se 
     }
 
     private void action111() {
@@ -335,6 +444,16 @@ public class SemanticAnalyzer {
     }
 
     private void action110() {
+        // TODO: 11/7/19 Fim de procedure
+        // retira da pilha de controle de procedures: número de parâmetros (np) , endereço da instrução
+        //de desvio
+        // gera instrução RETU
+        // verifica utilização de rótulos na TS
+        //
+        //
+        //completa instrução de desvio da procedure ( aponta para LC)
+        //deleta nomes do escopo do nível na TS
+        //decrementa nível (Nível_atual:= nível_atual – 1) 
     }
 
     private void action109() {
@@ -408,12 +527,11 @@ public class SemanticAnalyzer {
         }
     }
 
-    private void action105() throws SymbolDeclaredException {
+    private void action105() {
         Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.CONSTANTE, this.actualLevel, 0, 0);
-        if (!this.symbolsTable.exists(newSymbol)) {
+        try {
             this.symbolsTable.add(newSymbol);
-        } else {
-            throw new SymbolDeclaredException();
+        } catch (SymbolDeclaredException e) {
         }
     }
 
