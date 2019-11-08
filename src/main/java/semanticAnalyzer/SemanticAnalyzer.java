@@ -40,6 +40,12 @@ public class SemanticAnalyzer {
 
     private Symbol lastSymbol;
 
+    private Stack<int[]> procedureDeviationControlStack = new Stack<int[]>();
+
+    private Stack<Symbol> paramControlStack = new Stack<Symbol>();
+
+    private Symbol actualProcedure;
+
     public SemanticAnalyzer() {
         this.symbolsTable = new SymbolsTable();
     }
@@ -448,6 +454,12 @@ public class SemanticAnalyzer {
     }
 
     private void action114() {
+        Symbol symbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, actualLevel, 0, 0);
+        try {
+            Symbol symbol1 = symbolsTable.find(symbol);
+        } catch (SymbolNotFoundException e) {
+            e.printStackTrace();
+        }
         // TODO: 11/7/19 Atribuição parte esquerda
         //se nome está na tabela de símbolos então
         //se nome <> nome de variável então erro
@@ -477,24 +489,24 @@ public class SemanticAnalyzer {
 
     private void action109() {
         if (this.hasParameters) {
-            try {
-                Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, 0, 0);
-                Symbol symbol = symbolsTable.find(newSymbol);
-                symbol.generalB = this.parameterNumber;
-                // TODO: 11/5/19 preenche atributos dos parâmetros (deslocamento):
-                //primeiro parâmetro –> deslocamento = - (np)
-                //segundo parâmetro –> deslocamento = - (np – 1)
-            } catch (SymbolNotFoundException e) {
+            actualProcedure.generalB = this.parameterNumber;
+            for (int i = 1; i <= this.parameterNumber; i++) {
+                Symbol symbol1 = paramControlStack.pop();
+                symbol1.generalA = i * -1;
             }
         }
-        // TODO: 11/5/19 gera instrução DSVS com parâmetro zero, e salva na pilha de controle de desvios de
-        //procedure o endereço da instrução de desvio e o número de parâmetros.
+        this.hipotetica.addInstruction(InstructionArea.DSVS, 0, 0);
+        int[] control = new int[2];
+        control[0] = this.hipotetica.intructionArea.LC;
+        control[1] = this.parameterNumber;
+        procedureDeviationControlStack.add(control);
     }
 
     private void action108() {
         try {
             Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, 0, 0);
             symbolsTable.add(newSymbol);
+            actualProcedure = newSymbol;
         } catch (SymbolDeclaredException e) {
         }
         this.hasParameters = false;
@@ -519,14 +531,6 @@ public class SemanticAnalyzer {
 
     private void action104() {
         switch (this.identificatorType) {
-            case Symbol.ROTULO:
-                try {
-                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.ROTULO, this.actualLevel, 0, 0);
-                    symbolsTable.add(newSymbol);
-                    // TODO: 11/5/19 cabeça de lista de referências futuras = 0
-                } catch (SymbolDeclaredException e) {
-                }
-                break;
             case Symbol.VARIAVEL:
                 try {
                     Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, this.actualLevel, 0, 0);
@@ -540,6 +544,7 @@ public class SemanticAnalyzer {
                     Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PARAMETRO, this.actualLevel, 0, 0);
                     symbolsTable.add(newSymbol);
                     this.parameterNumber++;
+                    paramControlStack.add(newSymbol);
                 } catch (SymbolDeclaredException e) {
                 }
                 break;
