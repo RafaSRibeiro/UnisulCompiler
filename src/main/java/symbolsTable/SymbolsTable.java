@@ -99,6 +99,25 @@ public class SymbolsTable {
         return true;
     }
 
+    public Symbol findByName(String name) throws SymbolNotFoundException {
+        int index = this.hash(name, tableSize);
+        if (hashtable[index] != null) {
+            Symbol symbolLinked = hashtable[index];
+            if (symbolLinked.name.equals(name))
+                return symbolLinked;
+            while (symbolLinked.next != null) {
+                symbolLinked = symbolLinked.next;
+                if (symbolLinked.name.equals(name))
+                    return symbolLinked;
+            }
+            if (symbolLinked.next == null)
+                throw new SymbolNotFoundException("Símbolo " + name + " não existe");
+        } else {
+            throw new SymbolNotFoundException("Símbolo " + name + " não existe");
+        }
+        throw new SymbolNotFoundException("Símbolo " + name + " não existe");
+    }
+
     public Symbol find(Symbol symbol) throws SymbolNotFoundException {
         int index = this.hash(symbol.name, tableSize);
         if (hashtable[index] != null) {

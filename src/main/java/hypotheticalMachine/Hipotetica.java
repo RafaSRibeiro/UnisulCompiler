@@ -359,9 +359,9 @@ public class Hipotetica {
                 this.intructionArea.instructions[this.intructionArea.LC].op2 = o2;
             }
 
-            if (o2 != -1) {
+//            if (o2 != -1) {
                 this.intructionArea.instructions[this.intructionArea.LC].op2 = o2;
-            }
+//            }
 
             this.intructionArea.LC = this.intructionArea.LC + 1;
         }

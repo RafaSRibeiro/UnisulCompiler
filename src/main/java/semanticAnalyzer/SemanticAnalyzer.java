@@ -40,11 +40,21 @@ public class SemanticAnalyzer {
 
     private Symbol lastSymbol;
 
-    private Stack<int[]> procedureDeviationControlStack = new Stack<int[]>();
+    private Stack<ProcedureDeviationControl> procedureDeviationControlStack = new Stack<ProcedureDeviationControl>();
 
     private Stack<Symbol> paramControlStack = new Stack<Symbol>();
 
+    private Stack<Integer> whileControlStack = new Stack<Integer>();
+
+    private Stack<Integer> ifControlStack = new Stack<Integer>();
+
     private Symbol actualProcedure;
+
+    private Symbol actualSymbol;
+
+    private int lastDSVF;
+
+    public lexicoAnalyzer.Symbol previousToken;
 
     public SemanticAnalyzer() {
         this.symbolsTable = new SymbolsTable();
@@ -212,6 +222,7 @@ public class SemanticAnalyzer {
                 action156();
                 break;
         }
+        System.out.print(action);
     }
 
     private void action101() {
@@ -238,8 +249,7 @@ public class SemanticAnalyzer {
     }
 
     private void action152() {
-        // TODO: 11/7/19 Expressão – divisão
-        // gera DIV 
+        this.hipotetica.addInstruction(InstructionArea.DIVI,0,0);
     }
 
     private void action151() {
@@ -362,28 +372,33 @@ public class SemanticAnalyzer {
     }
 
     private void action129() {
-        switch (this.context) {
-            case CONTEXT_READLN:
-                // TODO: 11/7/19 se identificador é nome de variável e está na tabela de símbolos então
-                //gera LEIT
-                //gera ARMZ
-                //senão erro
-                //fim se
-                break;
-            case CONTEXT_EXPRESSAO:
-                // TODO: 11/7/19 se nome não está na tabela de símbolos
-                //então erro
-                //senão
-                //se nome é de procedure ou de rótulo
-                //então erro
-                //senão se nome é de constante
-                //então gera CRCT valor decimal
-                //senão gera CRVL - , deslocamento
-                //fim se
-                //fim se
-                //fim se
-                break;
+        try {
+            Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+            switch (this.context) {
+                case CONTEXT_READLN:
+                    if (symbol.category == Symbol.VARIAVEL) {
+                        this.hipotetica.addInstruction(InstructionArea.LEIT, 0, 0);
+                        this.hipotetica.addInstruction(InstructionArea.ARMZ, symbol.level, symbol.generalA);
+                    } else {
+                        throw new Exception();
+                    }
+                    break;
+                case CONTEXT_EXPRESSAO:
+                    if (symbol.category == Symbol.PROCEDURE)
+                        throw new Exception();
+                    if (symbol.category == Symbol.CONSTANTE) {
+                        this.hipotetica.addInstruction(InstructionArea.CRCT, 0, symbol.generalA);
+                    } else {
+                        this.hipotetica.addInstruction(InstructionArea.CRVL, actualLevel - symbol.level, symbol.generalA);
+                    }
+                    break;
+            }
+        } catch (SymbolNotFoundException e) {
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     private void action128() {
@@ -407,23 +422,24 @@ public class SemanticAnalyzer {
     }
 
     private void action123() {
-        // TODO: 11/7/19 Comando WHILE antes da expressão
-        // o valor de LC é armazenado na pilha dos WHILE’s, este é o endereço de retorno do
-        //WHILE 
+        whileControlStack.add(hipotetica.intructionArea.LC);
     }
 
     private void action122() {
+
         System.out.print("TODO");
     }
 
     private void action121() {
-        // TODO: 11/7/19 Após instrução IF
-        // completa instrução DSVS gerada na ação #122
+        //completa instrução DSVS gerada na ação #122
+        this.hipotetica.intructionArea.instructions[lastDSVF].setOp2(hipotetica.intructionArea.LC);
         // operando recebe valor de LC 
     }
 
     private void action120() {
-        System.out.print("TODO");
+        this.hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
+        lastDSVF = hipotetica.intructionArea.LC - 1;
+        ifControlStack.add(hipotetica.intructionArea.LC);
     }
 
     private void action118() {
@@ -450,23 +466,17 @@ public class SemanticAnalyzer {
     }
 
     private void action115() {
-        // TODO: 11/7/19
+        this.hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - actualSymbol.level, actualSymbol.generalA);
     }
 
     private void action114() {
         Symbol symbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, actualLevel, 0, 0);
         try {
-            Symbol symbol1 = symbolsTable.find(symbol);
+            Symbol symbol1 = symbolsTable.findByName(symbol.name);
+            actualSymbol = symbol1;
         } catch (SymbolNotFoundException e) {
             e.printStackTrace();
         }
-        // TODO: 11/7/19 Atribuição parte esquerda
-        //se nome está na tabela de símbolos então
-        //se nome <> nome de variável então erro
-        //senão salva atributos do nome
-        //fim se
-        //senão erro (“identificador não declarado”)
-        //fim se 
     }
 
     private void action111() {
@@ -475,16 +485,11 @@ public class SemanticAnalyzer {
     }
 
     private void action110() {
-        // TODO: 11/7/19 Fim de procedure
-        // retira da pilha de controle de procedures: número de parâmetros (np) , endereço da instrução
-        //de desvio
-        // gera instrução RETU
-        // verifica utilização de rótulos na TS
-        //
-        //
-        //completa instrução de desvio da procedure ( aponta para LC)
-        //deleta nomes do escopo do nível na TS
-        //decrementa nível (Nível_atual:= nível_atual – 1) 
+        ProcedureDeviationControl procedureDeviationControl = procedureDeviationControlStack.pop();
+        this.hipotetica.addInstruction(InstructionArea.RETU, 0, procedureDeviationControl.paramcount);
+        this.hipotetica.intructionArea.instructions[procedureDeviationControl.pointer-1].op2 = this.hipotetica.intructionArea.LC;
+        // TODO: 11/15/19  deleta nomes do escopo do nível na TS;
+        actualLevel--;
     }
 
     private void action109() {
@@ -496,10 +501,10 @@ public class SemanticAnalyzer {
             }
         }
         this.hipotetica.addInstruction(InstructionArea.DSVS, 0, 0);
-        int[] control = new int[2];
-        control[0] = this.hipotetica.intructionArea.LC;
-        control[1] = this.parameterNumber;
-        procedureDeviationControlStack.add(control);
+        ProcedureDeviationControl procedureDeviationControl = new ProcedureDeviationControl();
+        procedureDeviationControl.pointer = this.hipotetica.intructionArea.LC;
+        procedureDeviationControl.paramcount = this.parameterNumber;
+        procedureDeviationControlStack.add(procedureDeviationControl);
     }
 
     private void action108() {
@@ -526,7 +531,8 @@ public class SemanticAnalyzer {
     }
 
     private void action102() {
-        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, variableNumber);
+        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, variableNumber + 3);
+        variableNumber = 0;
     }
 
     private void action104() {
@@ -536,6 +542,7 @@ public class SemanticAnalyzer {
                     Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, this.actualLevel, 0, 0);
                     symbolsTable.add(newSymbol);
                     this.variableNumber++;
+                    newSymbol.generalA = this.variableNumber + 2;
                 } catch (SymbolDeclaredException e) {
                 }
                 break;

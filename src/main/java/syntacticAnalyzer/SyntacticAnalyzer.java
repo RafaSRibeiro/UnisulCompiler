@@ -47,6 +47,7 @@ public class SyntacticAnalyzer {
                 }
                 //se o simbolo atual, topo da pilha de simbolos, for NÃO TERMINAL
             } else if (isNonTerminal(currentAuxToken)) {
+                semanticAnalyzer.previousToken = currentToken;
                 //se existe derivação para o não terminal encontrado
                 if (hasParseTable(currentAuxToken, currentToken.getId())) {
                     //desempilha a simbolo que gerou as derivações
