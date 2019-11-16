@@ -14,13 +14,13 @@ public class SemanticAnalyzer {
     private static final int CONTEXT_EXPRESSAO = 1;
     private static final int CONTEXT_READLN = 2;
 
-     private Stack conditionStack;
+    private Stack conditionStack;
 
-     private SymbolsTable symbolsTable;
+    private SymbolsTable symbolsTable;
 
-     private int actualLevel;
+    private int actualLevel;
 
-     private int freePosition;
+    private int freePosition;
 
     private int variableNumber;
 
@@ -48,13 +48,21 @@ public class SemanticAnalyzer {
 
     private Stack<Integer> ifControlStack = new Stack<Integer>();
 
+    private Stack<Integer> forControlStack = new Stack<Integer>();
+
     private Symbol actualProcedure;
 
-    private Symbol actualSymbol;
+    private Symbol leftAssignmentName;
 
     private int lastDSVF;
 
     public lexicoAnalyzer.Symbol previousToken;
+
+    public Symbol procedure;
+
+    public Symbol currentForIdentifier;
+
+    private int effectiveParameterNumber = 0;
 
     public SemanticAnalyzer() {
         this.symbolsTable = new SymbolsTable();
@@ -222,7 +230,6 @@ public class SemanticAnalyzer {
                 action156();
                 break;
         }
-        System.out.print(action);
     }
 
     private void action101() {
@@ -236,41 +243,39 @@ public class SemanticAnalyzer {
     }
 
     private void action155() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.NEGA,0,0);
     }
 
     private void action154() {
-        // TODO: 11/7/19 Expressão – inteiro
-        // gera CRCT 
+        hipotetica.addInstruction(InstructionArea.CRCT, 0, Integer.parseInt(lastNonTerminalSymbol.getToken()));
     }
 
     private void action153() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.CONJ,0,0);
     }
 
     private void action152() {
-        this.hipotetica.addInstruction(InstructionArea.DIVI,0,0);
+        this.hipotetica.addInstruction(InstructionArea.DIVI, 0, 0);
     }
 
     private void action151() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.MULT, 0, 0);
     }
 
     private void action150() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.DISJ, 0, 0);
     }
 
     private void action149() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.SUBT, 0, 0);
     }
 
     private void action148() {
-        // TODO: 11/7/19 Expressão – subtração
-        // gera SUBT 
+        hipotetica.addInstruction(InstructionArea.SOMA, 0, 0);
     }
 
     private void action147() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.INVR, 0, 0);
     }
 
     private void action146() {
@@ -301,36 +306,64 @@ public class SemanticAnalyzer {
         // TODO: 11/7/19 Após comando em FOR
         // gera instrução CRVL, utilizando endereço salvo em #139( @ da TS da variável de controle
         //na pilha de controle)
+        hipotetica.addInstruction(InstructionArea.CRVL, currentForIdentifier.level, currentForIdentifier.generalA);
+
         // gera instrução CRCT (1) base 10
+        hipotetica.addInstruction(InstructionArea.CRCT, 0,1);
+
         // gera instrução soma (até aqui incrementa variável de controle)
+        hipotetica.addInstruction(InstructionArea.SOMA, 0, 0);
+
         // gera instrução ARMZ variável controle
+        hipotetica.addInstruction(InstructionArea.ARMZ, currentForIdentifier.level, currentForIdentifier.generalA);
+
         // completa instrução DSVF, gerada na ação #139, utilizando como operando (LC+1)
+        hipotetica.addInstruction(InstructionArea.DSVF, 0, hipotetica.intructionArea.LC + 1);
+
         // gera instruçao DSVS, utilizando como operando o valor de LC salvo na ação #139 (retorno) gera instrução AMEN, -1 (limpeza)
+        hipotetica.addInstruction(InstructionArea.DSVS, 0, forControlStack.pop() + 1);
+
+        hipotetica.addInstruction(InstructionArea.AMEM, 0, -1);
     }
 
     private void action139() {
         // TODO: 11/7/19 Após expressão – valor final
         // armazena valor de LC na pilha de controle do FOR
+        forControlStack.add(hipotetica.intructionArea.LC);
+
         // gera instrução COPIA
+        hipotetica.addInstruction(InstructionArea.COPY, 0, 0);
+
         // gera instrução CRVL – atributos salvos em #137
+        hipotetica.addInstruction(InstructionArea.CRVL, actualLevel - lastSymbol.level, lastSymbol.generalA);
+
         // gera instrução CMAI
+        hipotetica.addInstruction(InstructionArea.CMAI, 0, 0);
+
         // gera instrução DSVF com parâmetro desconhecido, guardando na pilha de controle o
+        hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
+
         //endereço do operando (ou da instrução) para posterior marcação.
         // armazena na pilha de controle o endereço do nome da variável de controle relativo à
-        //tabela de símbolos. 
+        //tabela de símbolos.
+        forControlStack.add(hipotetica.intructionArea.LC);
     }
 
     private void action138() {
-        // TODO: 11/7/19 Após expressão valor inicial
-        // gera instrução ARMZ – considerando variável de controle atributos salvos em #137) 
+        hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - currentForIdentifier.level, currentForIdentifier.generalA);
     }
 
     private void action137() {
-        // TODO: 11/7/19 Após variável controle comando FOR
-        //se nome esta na TS e é nome da variável então
-        //salva endereço do nome em relação a TS
-        //senão erro
-        //fim se 
+        try {
+            Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+            if (symbol.category == Symbol.VARIAVEL) {
+                currentForIdentifier = symbol;
+            } else {
+                System.out.print("ERRO 137");
+            }
+        } catch (SymbolNotFoundException e) {
+            System.out.print("ERRO 137");
+        }
     }
 
     private void action136() {
@@ -354,21 +387,12 @@ public class SemanticAnalyzer {
     }
 
     private void action131() {
-        // TODO: 11/7/19 WRITELN após expressão
-        // gera IMPR
+        hipotetica.addInstruction(InstructionArea.IMPR,0,0);
     }
 
     private void action130() {
-        // TODO: 11/7/19 WRITELN - após literal na instrução WRITELN
-        // armazena cadeia literal na área de literais (pega o literal identificado pelo léxico e
-        //transposta para área de literais – área_literais)
-        // atualiza ponteiro de literal ( pont_literal – vetor que aponta para o inicio do literal
-        //respectivo na área de literais) - aponta para o inicio do proximo literal.
-        // gera IMPRLIT tendo como parâmetro o numero de ordem do literal ( literal 1, literal 2
-        //...)
-        // incrementa no. de ordem do literal
-        //Nota : a área de literais (área_literais) e o ponteiro de literais (pont_literal) são gerados na fase
-        //de compilação e utilizados na fase de interpretação (execução) do programa. 
+        hipotetica.IncluirAL(hipotetica.instructionliteralarea, lastNonTerminalSymbol.getToken());
+        hipotetica.addInstruction(InstructionArea.IMPRL, 0, hipotetica.instructionliteralarea.LIT - 1);
     }
 
     private void action129() {
@@ -378,14 +402,17 @@ public class SemanticAnalyzer {
                 case CONTEXT_READLN:
                     if (symbol.category == Symbol.VARIAVEL) {
                         this.hipotetica.addInstruction(InstructionArea.LEIT, 0, 0);
-                        this.hipotetica.addInstruction(InstructionArea.ARMZ, symbol.level, symbol.generalA);
+                        this.hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - symbol.level, symbol.generalA);
                     } else {
+                        System.out.print("ERRO 129");
                         throw new Exception();
                     }
                     break;
                 case CONTEXT_EXPRESSAO:
-                    if (symbol.category == Symbol.PROCEDURE)
+                    if (symbol.category == Symbol.PROCEDURE) {
+                        System.out.print("ERRO 129");
                         throw new Exception();
+                    }
                     if (symbol.category == Symbol.CONSTANTE) {
                         this.hipotetica.addInstruction(InstructionArea.CRCT, 0, symbol.generalA);
                     } else {
@@ -394,11 +421,10 @@ public class SemanticAnalyzer {
                     break;
             }
         } catch (SymbolNotFoundException e) {
-
+            System.out.print("ERRO 129");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.print("ERRO 129");
         }
-
     }
 
     private void action128() {
@@ -443,39 +469,50 @@ public class SemanticAnalyzer {
     }
 
     private void action118() {
-        // TODO: 11/7/19 Após expressão, em comando call
-        // acumula número de parâmetros efetivos 
+        effectiveParameterNumber++;
     }
 
     private void action117() {
-        // TODO: 11/7/19 Após comando call
-        //se num. de parâmetros <> num. de parâmetros efetivos
-        //então erro
-        //senão
-        //gera instrução CALL, utilizando informaçoes da procedure, contidas na TS (
-        //endereço na TS salvo em ação #116)
-        //fim se 
+        try {
+            if (procedure.generalB != effectiveParameterNumber) {
+                System.out.print("ERRO 117");
+                throw new Exception();
+            } else {
+                hipotetica.addInstruction(InstructionArea.CALL, 0, procedure.generalA);
+                effectiveParameterNumber = 0;
+            }
+        } catch (Exception e) {
+            System.out.print("ERRO 117");
+        }
     }
 
     private void action116() {
-        // TODO: 11/7/19 Chamada de procedure
-        //se nome esta na TS e é nome de procedure
-        //então salva endereço do nome
-        //senão erro
-        //fim se 
+        try {
+            Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+            if (symbol.category == Symbol.PROCEDURE) {
+                procedure = symbol;
+            } else {
+                System.out.println("ERRO 116");
+            }
+        } catch (SymbolNotFoundException e) {
+            System.out.println("ERRO 116");
+        }
     }
 
     private void action115() {
-        this.hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - actualSymbol.level, actualSymbol.generalA);
+        this.hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - leftAssignmentName.level, leftAssignmentName.generalA);
     }
 
     private void action114() {
-        Symbol symbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, actualLevel, 0, 0);
         try {
-            Symbol symbol1 = symbolsTable.findByName(symbol.name);
-            actualSymbol = symbol1;
+            Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+            if (symbol.category == Symbol.VARIAVEL) {
+                leftAssignmentName = symbol;
+            } else {
+                System.out.print("ERRO 114");
+            }
         } catch (SymbolNotFoundException e) {
-            e.printStackTrace();
+            System.out.print("ERRO 114");
         }
     }
 
@@ -487,7 +524,7 @@ public class SemanticAnalyzer {
     private void action110() {
         ProcedureDeviationControl procedureDeviationControl = procedureDeviationControlStack.pop();
         this.hipotetica.addInstruction(InstructionArea.RETU, 0, procedureDeviationControl.paramcount);
-        this.hipotetica.intructionArea.instructions[procedureDeviationControl.pointer-1].op2 = this.hipotetica.intructionArea.LC;
+        this.hipotetica.intructionArea.instructions[procedureDeviationControl.pointer - 1].op2 = this.hipotetica.intructionArea.LC;
         // TODO: 11/15/19  deleta nomes do escopo do nível na TS;
         actualLevel--;
     }
@@ -512,11 +549,13 @@ public class SemanticAnalyzer {
             Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, 0, 0);
             symbolsTable.add(newSymbol);
             actualProcedure = newSymbol;
+            this.hasParameters = false;
+            this.parameterNumber = 0;
+            this.actualLevel++;
+            this.shift = 3;
         } catch (SymbolDeclaredException e) {
+            System.out.print("ERRO 108");
         }
-        this.hasParameters = false;
-        this.parameterNumber = 0;
-        this.actualLevel++;
     }
 
     private void action100() {
@@ -531,7 +570,8 @@ public class SemanticAnalyzer {
     }
 
     private void action102() {
-        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, variableNumber + 3);
+        this.shift = 3;
+        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, shift + variableNumber);
         variableNumber = 0;
     }
 
@@ -539,8 +579,9 @@ public class SemanticAnalyzer {
         switch (this.identificatorType) {
             case Symbol.VARIAVEL:
                 try {
-                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, this.actualLevel, 0, 0);
+                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, this.actualLevel, this.shift, 0);
                     symbolsTable.add(newSymbol);
+                    this.shift++;
                     this.variableNumber++;
                     newSymbol.generalA = this.variableNumber + 2;
                 } catch (SymbolDeclaredException e) {
@@ -573,10 +614,6 @@ public class SemanticAnalyzer {
 
     private void action107() {
         this.identificatorType = Symbol.VARIAVEL;
-    }
-
-    private void initVariables() {
-        // TODO: 10/20/19
     }
 
 }
