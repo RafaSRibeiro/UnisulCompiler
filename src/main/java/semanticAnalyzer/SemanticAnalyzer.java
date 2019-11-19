@@ -43,18 +43,16 @@ public class SemanticAnalyzer {
     private Stack<ProcedureDeviationControl> procedureDeviationControlStack = new Stack<ProcedureDeviationControl>();
 
     private Stack<Symbol> paramControlStack = new Stack<Symbol>();
-
-    private Stack<Integer> whileControlStack = new Stack<Integer>();
-
     private Stack<Integer> ifControlStack = new Stack<Integer>();
-
+    private Stack<Integer> whileControlStack = new Stack<Integer>();
+    private Stack<Integer> repeatControlStack = new Stack<Integer>();
+    private Stack<Integer> procedureControlStack = new Stack<Integer>();
+    private Stack<Integer> caseControlStack = new Stack<Integer>();
     private Stack<Integer> forControlStack = new Stack<Integer>();
 
     private Symbol actualProcedure;
 
     private Symbol leftAssignmentName;
-
-    private int lastDSVF;
 
     public lexicoAnalyzer.Symbol previousToken;
 
@@ -367,23 +365,51 @@ public class SemanticAnalyzer {
     }
 
     private void action136() {
-        System.out.print("TODO");
+        //    gera instrução COPIA
+        hipotetica.addInstruction(InstructionArea.COPY, 0, 0);
+        //    gera instrução CRCT inteiro
+        hipotetica.addInstruction(InstructionArea.CRCT, 0, Integer.parseInt(lastNonTerminalSymbol.getToken()));
+        //    gera instrução CMIG
+        hipotetica.addInstruction(InstructionArea.CMIG, 0, 0);
+        //    gera instrução DSVT – salvando endereço da instrução na pilha de controle para posterior marcação.
+        hipotetica.addInstruction(InstructionArea.DSVT, 0, 0);
+        caseControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
     private void action135() {
-        System.out.print("TODO");
+        //   resolve ultima instrução de desvio (DSVF) gerada,  utilizando endereços salvos na pilha de controle, colocando como operando (LC+1)
+        int casePosition = caseControlStack.pop();
+        hipotetica.alterInstruction(casePosition, 0, hipotetica.intructionArea.LC + 1);
+        //   gera instrução DSVS, guardando endereço da instrução  na pilha de controle, para posterior marcação
+        hipotetica.addInstruction(InstructionArea.DSVS, 0, 0);
+        caseControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
     private void action134() {
-        System.out.print("TODO");
+        //   gera instrução COPIA
+        hipotetica.addInstruction(InstructionArea.COPY, 0, 0);
+        //   gera instrução CRCT inteiro
+        hipotetica.addInstruction(InstructionArea.CRCT, 0, Integer.parseInt(lastNonTerminalSymbol.getToken()));
+        //   gera instrução CMIG
+        hipotetica.addInstruction(InstructionArea.CMIG, 0, 0);
+        //todo   resolve, se houver pendência, instruções de desvio (DSVT) utilizando endereços salvos na pilha de controle, colocando como operando (LC+1)
+
+        //  gera instrução DSVF, guardando endereço do operando ou da instrução na pilha de controle dos CASE´s.
+        hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
+        caseControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
     private void action133() {
-        System.out.print("TODO");
+        //   completa instruções de desvio (DSVS), relativas ao CASE em questão, com LC, utilizando endereços salvos na pilha de controle
+        int casePosition = caseControlStack.pop();
+        hipotetica.alterInstruction(casePosition, 0, hipotetica.intructionArea.LC);
+        //   gera instrução AMEN -, -1 (limpeza)
+        hipotetica.addInstruction(InstructionArea.AMEM, 0, -1);
     }
 
     private void action132() {
-        System.out.print("TODO");
+        // TODO: 18/11/2019  Após palavra reservada CASE
+        //  .  Acopla mecanismo de controle de inicio de CASE junto à pilha de controle de CASE
     }
 
     private void action131() {
@@ -391,7 +417,7 @@ public class SemanticAnalyzer {
     }
 
     private void action130() {
-        hipotetica.IncluirAL(hipotetica.instructionliteralarea, lastNonTerminalSymbol.getToken());
+        hipotetica.addLiteralArea(lastNonTerminalSymbol.getToken());
         hipotetica.addInstruction(InstructionArea.IMPRL, 0, hipotetica.instructionliteralarea.LIT - 1);
     }
 
@@ -432,19 +458,31 @@ public class SemanticAnalyzer {
     }
 
     private void action127() {
-        System.out.print("TODO");
+        // TODO: 18/11/2019  Comando REPEAT – fim
+        //     gera  DSVF, utilizando como operando o valor de LC guardado na pilha dos repeat´s conforme ação # 126.
+        hipotetica.addInstruction(InstructionArea.DSVF, 0, repeatControlStack.pop());
     }
 
     private void action126() {
-        System.out.print("TODO");
+        // TODO: 18/11/2019  Comando REPEAT – início
+        //    o valor de LC é armazenado numa pilha (pilha dos repeat´s) -  este é o endereço de retorno.
+        repeatControlStack.add(hipotetica.intructionArea.LC);
     }
 
     private void action125() {
-        System.out.print("TODO");
+        // TODO: 18/11/2019 Após comando WHILE
+        //   resolve DSVF da ação #124 colocando como operando o endereço(LC + 1)
+        int whileAddress = whileControlStack.pop();
+        hipotetica.alterInstruction(whileAddress, 0, hipotetica.intructionArea.LC + 1);
+        //   gera DSVS com operando = endereço de retorno, salvo na pilha de ação #123
+        hipotetica.addInstruction(InstructionArea.DSVS, 0, whileAddress);
     }
 
     private void action124() {
-        System.out.print("TODO");
+        // TODO: 18/11/2019  Comando WHILE depois da expressão
+        //   gera DSVF com operando desconhecido.  Como o operando não é conhecido no momento, o seu endereço (ou da instrução) é guardado na pilha dos WHILE’s para posterior marcação
+        hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
+        whileControlStack.add(hipotetica.intructionArea.LC);
     }
 
     private void action123() {
@@ -452,20 +490,26 @@ public class SemanticAnalyzer {
     }
 
     private void action122() {
+        // TODO: 18/11/2019  Após domínio do THEN, antes do ELSE
+        //   resolve DSVF da ação #120, colocando como operando o endereço (LC + 1)
+        this.hipotetica.alterInstruction(ifControlStack.pop(), 0, hipotetica.intructionArea.LC + 1);
 
-        System.out.print("TODO");
+
+        //   gera instrução DSVS, com operando desconhecido, salvando seu endereço na pilha dos IF’s para posterior marcação
+        this.hipotetica.addInstruction(InstructionArea.DSVS, 0,0);
+        ifControlStack.add(this.hipotetica.intructionArea.LC - 1);
     }
 
     private void action121() {
         //completa instrução DSVS gerada na ação #122
-        this.hipotetica.intructionArea.instructions[lastDSVF].setOp2(hipotetica.intructionArea.LC);
-        // operando recebe valor de LC 
+        // operando recebe valor de LC
+        this.hipotetica.alterInstruction(ifControlStack.pop(), 0, hipotetica.intructionArea.LC + 1);
+        ifControlStack.add(hipotetica.intructionArea.LC);
     }
 
     private void action120() {
         this.hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
-        lastDSVF = hipotetica.intructionArea.LC - 1;
-        ifControlStack.add(hipotetica.intructionArea.LC);
+        ifControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
     private void action118() {

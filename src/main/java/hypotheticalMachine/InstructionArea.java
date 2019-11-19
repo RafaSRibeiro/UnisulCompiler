@@ -21,6 +21,7 @@ public class InstructionArea {
     public static final int NEGA = 10;
     public static final int CONJ = 10;
     public static final int DISJ = 12;
+    public static final int CMIG = 15;
     public static final int CMAI = 18;
     public static final int DSVS = 19;
     public static final int DSVF = 20;
@@ -31,6 +32,7 @@ public class InstructionArea {
     public static final int CALL = 25;
     public static final int PARA = 26;
     public static final int COPY = 28;
+    public static final int DSVT = 29;
 
     public Instruction instructions[] = new Instruction[1000];
 

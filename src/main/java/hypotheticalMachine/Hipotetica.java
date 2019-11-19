@@ -38,7 +38,9 @@ public class Hipotetica {
      */
     public Hipotetica() {
         this.instructionliteralarea = new AreaLiterais();
+        InicializaAL();
         this.intructionArea = new InstructionArea();
+        InicializaAI();
 
         num_impr = 0;
     }
@@ -46,23 +48,23 @@ public class Hipotetica {
     /**
      * Inicializa a área de instruções.
      */
-    public static void InicializaAI(InstructionArea instructionArea) {
+    public void InicializaAI() {
         for (int i = 0; i < MaxInst; i++) { //começava de 1
-            instructionArea.instructions[i].codigo = -1;
-            instructionArea.instructions[i].op1 = -1;
-            instructionArea.instructions[i].op2 = -1;
+            this.intructionArea.instructions[i].codigo = -1;
+            this.intructionArea.instructions[i].op1 = -1;
+            this.intructionArea.instructions[i].op2 = -1;
         }
-        instructionArea.LC = 0;
+        this.intructionArea.LC = 0;
     }
 
     /**
      * Inicializa a área de literais
      */
-    public static void InicializaAL(AreaLiterais areaLiterais) {
+    public void InicializaAL() {
 
         for (int i = 0; i < MaxList; i++) {
-            areaLiterais.AL[i] = "";
-            areaLiterais.LIT = 0;
+            this.instructionliteralarea.AL[i] = "";
+            this.instructionliteralarea.LIT = 0;
         }
     }
 
@@ -70,14 +72,14 @@ public class Hipotetica {
      * Altera uma instrução da área de instruções utilizada pela máquina
      * hipotética.
      */
-    public static void AlterarAI(InstructionArea instructionArea, int s, int o1, int o2) {
+    public void alterInstruction(int position, int o1, int o2) {
 
         if (o1 != -1) {
-            instructionArea.instructions[s].op1 = o1;
+            this.intructionArea.instructions[position].op1 = o1;
         }
 
         if (o2 != -1) {
-            instructionArea.instructions[s].op2 = o2;
+            this.intructionArea.instructions[position].op2 = o2;
         }
     }
 
@@ -85,14 +87,14 @@ public class Hipotetica {
      * Inclui um literal na área de literais utilizada pela máquina
      * hipotética.
      */
-    public static boolean IncluirAL(AreaLiterais areaLiterais, String literal) {
+    public boolean addLiteralArea(String literal) {
         boolean aux;
-        if (areaLiterais.LIT >= MaxList) {
+        if (this.instructionliteralarea.LIT >= MaxList) {
             aux = false;
         } else {
             aux = true;
-            areaLiterais.AL[areaLiterais.LIT] = literal;
-            areaLiterais.LIT = areaLiterais.LIT + 1;
+            this.instructionliteralarea.AL[this.instructionliteralarea.LIT] = literal;
+            this.instructionliteralarea.LIT = this.instructionliteralarea.LIT + 1;
         }
         return aux;
     }
@@ -113,7 +115,7 @@ public class Hipotetica {
     /**
      * Responsável por interpretar as instruções.
      */
-    public static void Interpreta(InstructionArea instructionArea, AreaLiterais areaLiterais) {
+    public void Interpreta(AreaLiterais areaLiterais) {
 
         topo = 0;
         b = 0; //registrador base
@@ -127,11 +129,11 @@ public class Hipotetica {
 
         while (operador != 26) {//Enquanto instrução diferente de PARE
 
-            operador = instructionArea.instructions[p].codigo;
+            operador = this.intructionArea.instructions[p].codigo;
 
 
-            l = instructionArea.instructions[p].op1;
-            a = instructionArea.instructions[p].op2;
+            l = this.intructionArea.instructions[p].op1;
+            a = this.intructionArea.instructions[p].op2;
             p = p + 1;
 
             switch (operador) {
