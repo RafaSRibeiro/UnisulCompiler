@@ -231,9 +231,8 @@ public class SemanticAnalyzer {
     }
 
     private void action101() {
-        this.hipotetica.addInstruction(InstructionArea.PARA, 0, 0);
-        // TODO: 11/7/19
-        // Verifica utilização de rótulos através da tabela de símbolos
+        // Gera instrução PARA
+        this.hipotetica.addInstruction(InstructionArea.PARA, -1, -1);
     }
 
     private void action156() {
@@ -241,110 +240,107 @@ public class SemanticAnalyzer {
     }
 
     private void action155() {
-        hipotetica.addInstruction(InstructionArea.NEGA,0,0);
+        hipotetica.addInstruction(InstructionArea.NEGA,-1,-1);
     }
 
     private void action154() {
-        hipotetica.addInstruction(InstructionArea.CRCT, 0, Integer.parseInt(lastNonTerminalSymbol.getToken()));
+        hipotetica.addInstruction(InstructionArea.CRCT, -1, Integer.parseInt(lastNonTerminalSymbol.getToken()));
     }
 
     private void action153() {
-        hipotetica.addInstruction(InstructionArea.CONJ,0,0);
+        hipotetica.addInstruction(InstructionArea.CONJ,-1,-1);
     }
 
     private void action152() {
-        this.hipotetica.addInstruction(InstructionArea.DIVI, 0, 0);
+        this.hipotetica.addInstruction(InstructionArea.DIVI, -1, -1);
     }
 
     private void action151() {
-        hipotetica.addInstruction(InstructionArea.MULT, 0, 0);
+        hipotetica.addInstruction(InstructionArea.MULT, -1, -1);
     }
 
     private void action150() {
-        hipotetica.addInstruction(InstructionArea.DISJ, 0, 0);
+        hipotetica.addInstruction(InstructionArea.DISJ, -1, -1);
     }
 
     private void action149() {
-        hipotetica.addInstruction(InstructionArea.SUBT, 0, 0);
+        hipotetica.addInstruction(InstructionArea.SUBT, -1, -1);
     }
 
     private void action148() {
-        hipotetica.addInstruction(InstructionArea.SOMA, 0, 0);
+        hipotetica.addInstruction(InstructionArea.SOMA, -1, -1);
     }
 
     private void action147() {
-        hipotetica.addInstruction(InstructionArea.INVR, 0, 0);
+        hipotetica.addInstruction(InstructionArea.INVR, -1, -1);
     }
 
     private void action146() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.CMDF, -1, -1);
     }
 
     private void action145() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.CMEI, -1, -1);
     }
 
     private void action144() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.CMAI, -1, -1);
     }
 
     private void action143() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.CMMA, -1, -1);
     }
 
     private void action142() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.CMME, -1, -1);
     }
 
     private void action141() {
-        System.out.print("TODO");
+        hipotetica.addInstruction(InstructionArea.CMIG, -1, -1);
     }
 
     private void action140() {
-        // TODO: 11/7/19 Após comando em FOR
         // gera instrução CRVL, utilizando endereço salvo em #139( @ da TS da variável de controle
         //na pilha de controle)
         hipotetica.addInstruction(InstructionArea.CRVL, currentForIdentifier.level, currentForIdentifier.generalA);
 
         // gera instrução CRCT (1) base 10
-        hipotetica.addInstruction(InstructionArea.CRCT, 0,1);
+        hipotetica.addInstruction(InstructionArea.CRCT, -1,1);
 
         // gera instrução soma (até aqui incrementa variável de controle)
-        hipotetica.addInstruction(InstructionArea.SOMA, 0, 0);
+        hipotetica.addInstruction(InstructionArea.SOMA, -1, -1);
 
         // gera instrução ARMZ variável controle
         hipotetica.addInstruction(InstructionArea.ARMZ, currentForIdentifier.level, currentForIdentifier.generalA);
 
         // completa instrução DSVF, gerada na ação #139, utilizando como operando (LC+1)
-        hipotetica.addInstruction(InstructionArea.DSVF, 0, hipotetica.intructionArea.LC + 1);
+        hipotetica.alterInstruction(forControlStack.pop(), 0, hipotetica.intructionArea.LC + 1);
 
         // gera instruçao DSVS, utilizando como operando o valor de LC salvo na ação #139 (retorno) gera instrução AMEN, -1 (limpeza)
-        hipotetica.addInstruction(InstructionArea.DSVS, 0, forControlStack.pop() + 1);
+        hipotetica.addInstruction(InstructionArea.DSVS, 0, forControlStack.peek());
 
-        hipotetica.addInstruction(InstructionArea.AMEM, 0, -1);
+        hipotetica.addInstruction(InstructionArea.AMEM, -1, -1);
     }
 
     private void action139() {
-        // TODO: 11/7/19 Após expressão – valor final
         // armazena valor de LC na pilha de controle do FOR
         forControlStack.add(hipotetica.intructionArea.LC);
 
         // gera instrução COPIA
-        hipotetica.addInstruction(InstructionArea.COPY, 0, 0);
+        hipotetica.addInstruction(InstructionArea.COPY, -1, -1);
 
         // gera instrução CRVL – atributos salvos em #137
         hipotetica.addInstruction(InstructionArea.CRVL, actualLevel - lastSymbol.level, lastSymbol.generalA);
 
         // gera instrução CMAI
-        hipotetica.addInstruction(InstructionArea.CMAI, 0, 0);
+        hipotetica.addInstruction(InstructionArea.CMAI, -1, -1);
 
         // gera instrução DSVF com parâmetro desconhecido, guardando na pilha de controle o
-        hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
-
         //endereço do operando (ou da instrução) para posterior marcação.
         // armazena na pilha de controle o endereço do nome da variável de controle relativo à
         //tabela de símbolos.
         forControlStack.add(hipotetica.intructionArea.LC);
+        hipotetica.addInstruction(InstructionArea.DSVF, -1, -1);
     }
 
     private void action138() {
@@ -366,13 +362,13 @@ public class SemanticAnalyzer {
 
     private void action136() {
         //    gera instrução COPIA
-        hipotetica.addInstruction(InstructionArea.COPY, 0, 0);
+        hipotetica.addInstruction(InstructionArea.COPY, -1, -1);
         //    gera instrução CRCT inteiro
         hipotetica.addInstruction(InstructionArea.CRCT, 0, Integer.parseInt(lastNonTerminalSymbol.getToken()));
         //    gera instrução CMIG
-        hipotetica.addInstruction(InstructionArea.CMIG, 0, 0);
+        hipotetica.addInstruction(InstructionArea.CMIG, -1, -1);
         //    gera instrução DSVT – salvando endereço da instrução na pilha de controle para posterior marcação.
-        hipotetica.addInstruction(InstructionArea.DSVT, 0, 0);
+        hipotetica.addInstruction(InstructionArea.DSVT, -1, -1);
         caseControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
@@ -381,21 +377,21 @@ public class SemanticAnalyzer {
         int casePosition = caseControlStack.pop();
         hipotetica.alterInstruction(casePosition, 0, hipotetica.intructionArea.LC + 1);
         //   gera instrução DSVS, guardando endereço da instrução  na pilha de controle, para posterior marcação
-        hipotetica.addInstruction(InstructionArea.DSVS, 0, 0);
+        hipotetica.addInstruction(InstructionArea.DSVS, -1, -1);
         caseControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
     private void action134() {
         //   gera instrução COPIA
-        hipotetica.addInstruction(InstructionArea.COPY, 0, 0);
+        hipotetica.addInstruction(InstructionArea.COPY, -1, -1);
         //   gera instrução CRCT inteiro
         hipotetica.addInstruction(InstructionArea.CRCT, 0, Integer.parseInt(lastNonTerminalSymbol.getToken()));
         //   gera instrução CMIG
-        hipotetica.addInstruction(InstructionArea.CMIG, 0, 0);
+        hipotetica.addInstruction(InstructionArea.CMIG, -1, -1);
         //todo   resolve, se houver pendência, instruções de desvio (DSVT) utilizando endereços salvos na pilha de controle, colocando como operando (LC+1)
 
         //  gera instrução DSVF, guardando endereço do operando ou da instrução na pilha de controle dos CASE´s.
-        hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
+        hipotetica.addInstruction(InstructionArea.DSVF, -1, -1);
         caseControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
@@ -404,7 +400,7 @@ public class SemanticAnalyzer {
         int casePosition = caseControlStack.pop();
         hipotetica.alterInstruction(casePosition, 0, hipotetica.intructionArea.LC);
         //   gera instrução AMEN -, -1 (limpeza)
-        hipotetica.addInstruction(InstructionArea.AMEM, 0, -1);
+        hipotetica.addInstruction(InstructionArea.AMEM, -1, -1);
     }
 
     private void action132() {
@@ -413,12 +409,12 @@ public class SemanticAnalyzer {
     }
 
     private void action131() {
-        hipotetica.addInstruction(InstructionArea.IMPR,0,0);
+        hipotetica.addInstruction(InstructionArea.IMPR,-1,-1);
     }
 
     private void action130() {
         hipotetica.addLiteralArea(lastNonTerminalSymbol.getToken());
-        hipotetica.addInstruction(InstructionArea.IMPRL, 0, hipotetica.instructionliteralarea.LIT - 1);
+        hipotetica.addInstruction(InstructionArea.IMPRL, -1, hipotetica.instructionliteralarea.LIT - 1);
     }
 
     private void action129() {
@@ -427,7 +423,7 @@ public class SemanticAnalyzer {
             switch (this.context) {
                 case CONTEXT_READLN:
                     if (symbol.category == Symbol.VARIAVEL) {
-                        this.hipotetica.addInstruction(InstructionArea.LEIT, 0, 0);
+                        this.hipotetica.addInstruction(InstructionArea.LEIT, -1, -1);
                         this.hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - symbol.level, symbol.generalA);
                     } else {
                         System.out.print("ERRO 129");
@@ -458,19 +454,15 @@ public class SemanticAnalyzer {
     }
 
     private void action127() {
-        // TODO: 18/11/2019  Comando REPEAT – fim
         //     gera  DSVF, utilizando como operando o valor de LC guardado na pilha dos repeat´s conforme ação # 126.
         hipotetica.addInstruction(InstructionArea.DSVF, 0, repeatControlStack.pop());
     }
 
     private void action126() {
-        // TODO: 18/11/2019  Comando REPEAT – início
-        //    o valor de LC é armazenado numa pilha (pilha dos repeat´s) -  este é o endereço de retorno.
         repeatControlStack.add(hipotetica.intructionArea.LC);
     }
 
     private void action125() {
-        // TODO: 18/11/2019 Após comando WHILE
         //   resolve DSVF da ação #124 colocando como operando o endereço(LC + 1)
         int whileAddress = whileControlStack.pop();
         hipotetica.alterInstruction(whileAddress, 0, hipotetica.intructionArea.LC + 1);
@@ -479,9 +471,8 @@ public class SemanticAnalyzer {
     }
 
     private void action124() {
-        // TODO: 18/11/2019  Comando WHILE depois da expressão
         //   gera DSVF com operando desconhecido.  Como o operando não é conhecido no momento, o seu endereço (ou da instrução) é guardado na pilha dos WHILE’s para posterior marcação
-        hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
+        hipotetica.addInstruction(InstructionArea.DSVF, -1, -1);
         whileControlStack.add(hipotetica.intructionArea.LC);
     }
 
@@ -490,7 +481,6 @@ public class SemanticAnalyzer {
     }
 
     private void action122() {
-        // TODO: 18/11/2019  Após domínio do THEN, antes do ELSE
         //   resolve DSVF da ação #120, colocando como operando o endereço (LC + 1)
         this.hipotetica.alterInstruction(ifControlStack.pop(), 0, hipotetica.intructionArea.LC + 1);
 
@@ -508,7 +498,7 @@ public class SemanticAnalyzer {
     }
 
     private void action120() {
-        this.hipotetica.addInstruction(InstructionArea.DSVF, 0, 0);
+        this.hipotetica.addInstruction(InstructionArea.DSVF, -1, -1);
         ifControlStack.add(hipotetica.intructionArea.LC - 1);
     }
 
@@ -522,7 +512,7 @@ public class SemanticAnalyzer {
                 System.out.print("ERRO 117");
                 throw new Exception();
             } else {
-                hipotetica.addInstruction(InstructionArea.CALL, 0, procedure.generalA);
+                hipotetica.addInstruction(InstructionArea.CALL, -1, procedure.generalA);
                 effectiveParameterNumber = 0;
             }
         } catch (Exception e) {
@@ -561,15 +551,18 @@ public class SemanticAnalyzer {
     }
 
     private void action111() {
+        // seta tipo_identificador = parâmetro
         this.identificatorType = Symbol.PARAMETRO;
+        //  houve parâmetro = true
         this.hasParameters = true;
     }
 
     private void action110() {
         ProcedureDeviationControl procedureDeviationControl = procedureDeviationControlStack.pop();
-        this.hipotetica.addInstruction(InstructionArea.RETU, 0, procedureDeviationControl.paramcount);
+        this.hipotetica.addInstruction(InstructionArea.RETU, -1, procedureDeviationControl.paramcount);
         this.hipotetica.intructionArea.instructions[procedureDeviationControl.pointer - 1].op2 = this.hipotetica.intructionArea.LC;
         // TODO: 11/15/19  deleta nomes do escopo do nível na TS;
+//        symbolsTable.deleteSymbolByNameAndLevel();
         actualLevel--;
     }
 
@@ -581,7 +574,7 @@ public class SemanticAnalyzer {
                 symbol1.generalA = i * -1;
             }
         }
-        this.hipotetica.addInstruction(InstructionArea.DSVS, 0, 0);
+        this.hipotetica.addInstruction(InstructionArea.DSVS, -1, -1);
         ProcedureDeviationControl procedureDeviationControl = new ProcedureDeviationControl();
         procedureDeviationControl.pointer = this.hipotetica.intructionArea.LC;
         procedureDeviationControl.paramcount = this.parameterNumber;
@@ -590,11 +583,16 @@ public class SemanticAnalyzer {
 
     private void action108() {
         try {
-            Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, 0, 0);
+            //  categoria := proc
+            //  inserção
+            Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, hipotetica.intructionArea.LC + 1, -1);
             symbolsTable.add(newSymbol);
             actualProcedure = newSymbol;
+            //  houve_parametros := false
             this.hasParameters = false;
+            //  n_par := 0
             this.parameterNumber = 0;
+            //  incrementa nível (Nível_atual:= nível_atual + 1)
             this.actualLevel++;
             this.shift = 3;
         } catch (SymbolDeclaredException e) {
@@ -603,6 +601,18 @@ public class SemanticAnalyzer {
     }
 
     private void action100() {
+        //  Inicializa pilhas (ifs, while, repeat, procedures, case, for) –
+        //  Inicializa tabela de símbolos (vetor tab_hash e a própria tabela tab_simb) –
+        //  Inicializa área de instruções da máquina hipotética
+        //  Inicializa área de literais da máquina hipotética
+        //  Inicializa algumas variáveis :
+        //  nível_atual:=0 ( faz o controle do nível atual),
+        //  Pt_livre:=1 , (aponta para a próxima posição livre da tabela de símbolos)
+        //  escopo[0]:=1 (usada juntamente com Tabela de símbolos), Observa-se que estas três variáveis, dependendo da implementação, podem ser inicializadas na Classe TS.
+        //  número de variáveis nv :=0 (número de variáveis num bloco)
+        //  deslocamento=:3 ( em relação a base),
+        //  Lc:=1 (aponta para a próxima instrução a ser gerada)
+        //  Lit := 1 { ponteiro auxiliar para área de literais – n. de ordem}
         this.conditionStack = new Stack();
         this.symbolsTable = new SymbolsTable();
         this.actualLevel = 0;
@@ -614,13 +624,15 @@ public class SemanticAnalyzer {
     }
 
     private void action102() {
+        //  Gera instrução AMEM utilizando como base o número de ações acumuladas na ação #104
         this.shift = 3;
-        this.hipotetica.addInstruction(InstructionArea.AMEM, 0, shift + variableNumber);
+        this.hipotetica.addInstruction(InstructionArea.AMEM, -1, shift + variableNumber);
         variableNumber = 0;
     }
 
     private void action104() {
         switch (this.identificatorType) {
+            // caso tipo_identificador = VARIÁVEL {setado em #107}   se nome está na tabela de símbolos no escopo do nível                                     (* usar rotina de inserção*)                                  então erro  senão                                   - insere identificador na TS com os atributos: categoria =  variável, nível, deslocamento;    - acumula número de variáveis (* nv:=nv +1 *)   fim se
             case Symbol.VARIAVEL:
                 try {
                     Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.VARIAVEL, this.actualLevel, this.shift, 0);
@@ -631,9 +643,10 @@ public class SemanticAnalyzer {
                 } catch (SymbolDeclaredException e) {
                 }
                 break;
+            // caso tipo_identificador = PARÂMETRO {setado em #111}   se nome está na tabela de símbolos no escopo do nível                      (* usar rotina de inserção na TS*)                       então erro   senão    insere nome na tabela de símbolos preenchendo    atributos: categoria = parâmetro, nível;    acumula número de parâmetros (* np=np+1*)   fim se
             case Symbol.PARAMETRO:
                 try {
-                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PARAMETRO, this.actualLevel, 0, 0);
+                    Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PARAMETRO, this.actualLevel, -1, -1);
                     symbolsTable.add(newSymbol);
                     this.parameterNumber++;
                     paramControlStack.add(newSymbol);
@@ -644,7 +657,14 @@ public class SemanticAnalyzer {
     }
 
     private void action105() {
-        Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.CONSTANTE, this.actualLevel, 0, 0);
+        //     se nome já declarado no escopo do nível
+        //     então erro
+        //     senão
+        //     insere identificador na tabela de símbolos preenchendo
+        //     atributos : categoria = constante, nível
+        //     Salva endereço do identificador na TS
+        //     fim se
+        Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.CONSTANTE, this.actualLevel, -1, -1);
         try {
             this.symbolsTable.add(newSymbol);
             lastSymbol = newSymbol;
@@ -653,10 +673,12 @@ public class SemanticAnalyzer {
     }
 
     private void action106() {
+        // preenche atributo para constante na TS (valor base 10), utilizando endereço do identificador na TS salvo em ação #105
         lastSymbol.generalA = Integer.parseInt(lastNonTerminalSymbol.getToken());
     }
 
     private void action107() {
+        // seta tipo_identificador = variável
         this.identificatorType = Symbol.VARIAVEL;
     }
 

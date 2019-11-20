@@ -99,6 +99,36 @@ public class SymbolsTable {
         return true;
     }
 
+    public void deleteSymbolByNameAndLevel(String name, int level) {
+        try {
+            Symbol symbol = findByNameAndLevel(name, level);
+            remove(symbol);
+        } catch (SymbolNotFoundException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Symbol findByNameAndLevel(String name, int level) throws SymbolNotFoundException {
+        int index = this.hash(name, tableSize);
+        if (hashtable[index] != null) {
+            Symbol symbolLinked = hashtable[index];
+            if (symbolLinked.name.equals(name) && symbolLinked.level == level)
+                return symbolLinked;
+            while (symbolLinked.next != null) {
+                symbolLinked = symbolLinked.next;
+                if (symbolLinked.name.equals(name) && symbolLinked.level == level)
+                    return symbolLinked;
+            }
+            if (symbolLinked.next == null)
+                throw new SymbolNotFoundException("Símbolo " + name + " não existe");
+        } else {
+            throw new SymbolNotFoundException("Símbolo " + name + " não existe");
+        }
+        throw new SymbolNotFoundException("Símbolo " + name + " não existe");
+    }
+
     public Symbol findByName(String name) throws SymbolNotFoundException {
         int index = this.hash(name, tableSize);
         if (hashtable[index] != null) {

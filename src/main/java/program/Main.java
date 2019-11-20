@@ -139,7 +139,7 @@ public class Main extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 465);
         setVisible(true);
-        analyserButton.doClick();
+//        analyserButton.doClick();
     }
 
     public static void main(String args[]) {

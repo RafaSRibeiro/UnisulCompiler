@@ -19,9 +19,13 @@ public class InstructionArea {
     public static final int DIVI = 8;
     public static final int INVR = 9;
     public static final int NEGA = 10;
-    public static final int CONJ = 10;
+    public static final int CONJ = 11;
     public static final int DISJ = 12;
+    public static final int CMME = 13;
+    public static final int CMMA = 14;
     public static final int CMIG = 15;
+    public static final int CMDF = 16;
+    public static final int CMEI = 17;
     public static final int CMAI = 18;
     public static final int DSVS = 19;
     public static final int DSVF = 20;

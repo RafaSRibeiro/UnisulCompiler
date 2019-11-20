@@ -13,6 +13,8 @@ public class SyntacticAnalyzer {
 
     public void analyse(List<Symbol> symbols) throws SyntacticAnalyzerException {
 
+        Symbol currentToken = new Symbol();
+
         //instancia a pilha de simbolos e empilha $
         Stack auxStack = new Stack();
         auxStack.push(ParserConstants.START_SYMBOL);
@@ -32,7 +34,10 @@ public class SyntacticAnalyzer {
             }
             //instancia os simbolos que serão comparados (pilha de simbolo x pilha de entrada)
             int currentAuxToken = ((Integer) auxStack.peek()).intValue();
-            Symbol currentToken = (Symbol) inputSymbols.peek();
+
+            if (inputSymbols.size() > 0) {
+                currentToken = (Symbol) inputSymbols.peek();
+            }
 
             //se o simbolo atual, topo da pilha da simbolos, for TERMINAL
             if (isTerminal(currentAuxToken) || auxStack.empty()) {

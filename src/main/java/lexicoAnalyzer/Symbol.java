@@ -24,6 +24,10 @@ public class Symbol {
         this.col = 0;
     }
 
+    public Symbol() {
+
+    }
+
     public Integer getId() {
         return id;
     }

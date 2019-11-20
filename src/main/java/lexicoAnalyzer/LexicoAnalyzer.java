@@ -22,7 +22,8 @@ public class LexicoAnalyzer {
         int col = 1;
         int i = 0;
 
-        while (i < input.length()) {
+        input = input + ' ';
+        while (i <input.length()) {
             //pega o char correspondente a posição na string
             char currentChar = input.charAt(i);
             switch (state) {
