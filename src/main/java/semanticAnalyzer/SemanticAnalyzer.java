@@ -561,8 +561,12 @@ public class SemanticAnalyzer {
         ProcedureDeviationControl procedureDeviationControl = procedureDeviationControlStack.pop();
         this.hipotetica.addInstruction(InstructionArea.RETU, -1, procedureDeviationControl.paramcount);
         this.hipotetica.intructionArea.instructions[procedureDeviationControl.pointer - 1].op2 = this.hipotetica.intructionArea.LC;
-        // TODO: 11/15/19  deleta nomes do escopo do nível na TS;
-//        symbolsTable.deleteSymbolByNameAndLevel();
+        // deleta nomes do escopo do nível na TS;
+        try {
+            symbolsTable.deleteSymbolByLevel(actualLevel);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         actualLevel--;
     }
 

@@ -1,5 +1,7 @@
 package symbolsTable;
 
+import java.util.Stack;
+
 public class SymbolsTable {
 
     private final int tableSize = 25147; //first prime after 25143
@@ -99,34 +101,25 @@ public class SymbolsTable {
         return true;
     }
 
-    public void deleteSymbolByNameAndLevel(String name, int level) {
-        try {
-            Symbol symbol = findByNameAndLevel(name, level);
-            remove(symbol);
-        } catch (SymbolNotFoundException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+    public void deleteSymbolByLevel(int level) throws ClassNotFoundException {
+        Stack<Symbol> symbolStack = findByLevel(level);
+        while (!symbolStack.empty()) {
+            remove(symbolStack.pop());
         }
     }
 
-    public Symbol findByNameAndLevel(String name, int level) throws SymbolNotFoundException {
-        int index = this.hash(name, tableSize);
-        if (hashtable[index] != null) {
-            Symbol symbolLinked = hashtable[index];
-            if (symbolLinked.name.equals(name) && symbolLinked.level == level)
-                return symbolLinked;
-            while (symbolLinked.next != null) {
-                symbolLinked = symbolLinked.next;
-                if (symbolLinked.name.equals(name) && symbolLinked.level == level)
-                    return symbolLinked;
+    public Stack<Symbol> findByLevel(int level) {
+        Stack<Symbol> symbolStack = new Stack<Symbol>();
+        for (int i = 0; i < tableSize; i++) {
+            if (hashtable[i] != null && hashtable[i].level == level) {
+                symbolStack.add(hashtable[i]);
+                while (hashtable[i].next != null) {
+                    if (hashtable[i].level == level)
+                        symbolStack.add(hashtable[i]);
+                }
             }
-            if (symbolLinked.next == null)
-                throw new SymbolNotFoundException("Símbolo " + name + " não existe");
-        } else {
-            throw new SymbolNotFoundException("Símbolo " + name + " não existe");
         }
-        throw new SymbolNotFoundException("Símbolo " + name + " não existe");
+        return symbolStack;
     }
 
     public Symbol findByName(String name) throws SymbolNotFoundException {
