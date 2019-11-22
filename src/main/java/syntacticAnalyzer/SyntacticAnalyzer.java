@@ -1,17 +1,17 @@
 package syntacticAnalyzer;
 
-import lexicoAnalyzer.LexicoAnalyzer;
 import lexicoAnalyzer.Symbol;
 import semanticAnalyzer.SemanticAnalyzer;
+import semanticAnalyzer.SemanticException;
+import symbolsTable.SymbolDeclaredException;
+import symbolsTable.SymbolNotFoundException;
 
-import javax.swing.text.html.parser.Parser;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 public class SyntacticAnalyzer {
 
-    public void analyse(List<Symbol> symbols) throws SyntacticAnalyzerException {
+    public void analyse(List<Symbol> symbols) throws SyntacticAnalyzerException, SymbolNotFoundException, SymbolDeclaredException, SemanticException {
 
         Symbol currentToken = new Symbol();
 
@@ -42,6 +42,7 @@ public class SyntacticAnalyzer {
             //se o simbolo atual, topo da pilha da simbolos, for TERMINAL
             if (isTerminal(currentAuxToken) || auxStack.empty()) {
                 semanticAnalyzer.lastNonTerminalSymbol = currentToken;
+                semanticAnalyzer.tokens.add(currentToken);
                 //se os simbolos das pilhas de simbolos e de entrada coincidirem, desempilha o simbolo das duas
                 if (currentAuxToken == currentToken.getId()) {
                     auxStack.pop();

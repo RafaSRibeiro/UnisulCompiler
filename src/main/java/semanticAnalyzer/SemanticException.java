@@ -1,10 +1,10 @@
-package symbolsTable;
+package semanticAnalyzer;
 
-public class SymbolNotFoundException extends ClassNotFoundException {
+public class SemanticException extends Exception {
 
     public String message;
 
-    public SymbolNotFoundException(String message){
+    public SemanticException(String message){
         this.message = message;
     }
 
@@ -12,4 +12,5 @@ public class SymbolNotFoundException extends ClassNotFoundException {
     public String getMessage(){
         return message;
     }
+
 }

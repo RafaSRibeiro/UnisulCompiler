@@ -107,10 +107,8 @@ public class Main extends JFrame {
                     syntacticAnalyzer.analyse(symbols);
                     //se não houver nenhum erro, exibe a mensagem de conclusao
                     textAreaError.setText("Finished");
-                } catch (SyntacticAnalyzerException ex) {
-                    textAreaError.setText("Error: " + ex.getMessage());
                 } catch (Exception ex) {
-                    textAreaError.setText("Error: " + ex.getMessage());
+                    textAreaError.setText(ex.getMessage());
                 }
 
 
