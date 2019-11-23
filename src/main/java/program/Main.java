@@ -4,19 +4,16 @@ import lexicoAnalyzer.LexicoAnalyzer;
 import lexicoAnalyzer.Symbol;
 import syntacticAnalyzer.SyntacticAnalyzer;
 
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.TextArea;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class Main extends JFrame {
@@ -106,6 +103,7 @@ public class Main extends JFrame {
         createSyntacticAnalyzeButton();
         createButtonClean();
         createExecuteButton();
+        createOpenFileButton();
     }
 
     private void createTokenTable() {
@@ -215,6 +213,36 @@ public class Main extends JFrame {
         });
         analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
         analyserButton.setBounds(550, 750, 215, 47);
+        container.add(analyserButton);
+    }
+
+    private void createOpenFileButton() {
+        JButton analyserButton = new JButton("Open File");
+        analyserButton.addActionListener(new ActionListener() {
+
+            //ação ao clica no botão
+            public void actionPerformed(ActionEvent e) {
+                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
+                String entrada = consoleTextArea.getText() + "";
+
+                try {
+                    FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
+                    dialog.setMode(FileDialog.LOAD);
+                    dialog.setVisible(true);
+                    String file = dialog.getFile();
+                    String fileString = new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8);
+                    consoleTextArea.setText(fileString);
+                    textAreaError.setText("Load Finished");
+                } catch (Exception ex) {
+                    textAreaError.setText(ex.getMessage());
+                }
+
+
+            }
+
+        });
+        analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
+        analyserButton.setBounds(550, 850, 215, 47);
         container.add(analyserButton);
     }
 
