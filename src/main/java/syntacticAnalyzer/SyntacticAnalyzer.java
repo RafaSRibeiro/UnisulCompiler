@@ -77,6 +77,7 @@ public class SyntacticAnalyzer {
                 throw new SyntacticAnalyzerException(error(currentAuxToken, currentToken));
             }
         } while (!auxStack.empty());
+        semanticAnalyzer.hipotetica.Interpreta();
     }
 
     //testa se o token é terminal ou não (id do token < primeiro não terminal

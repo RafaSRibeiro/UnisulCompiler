@@ -30,7 +30,7 @@ public class SemanticAnalyzer {
 
     private boolean hasParameters = false;
 
-    private Hipotetica hipotetica;
+    public Hipotetica hipotetica;
 
     public int identificatorType;
 

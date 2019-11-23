@@ -115,7 +115,7 @@ public class Hipotetica {
     /**
      * Responsável por interpretar as instruções.
      */
-    public void Interpreta(AreaLiterais areaLiterais) {
+    public void Interpreta() {
 
         topo = 0;
         b = 0; //registrador base
@@ -287,11 +287,11 @@ public class Hipotetica {
                     break;
 
                 case 23://IMPRLIT
-                    if (a >= areaLiterais.LIT) {
+                    if (a >= this.instructionliteralarea.LIT) {
                         JOptionPane.showMessageDialog(null, "Literal não encontrado na área dos literais.", "Erro durante a execução", JOptionPane.ERROR_MESSAGE);
                         //System.out.println("ERRO >> Literal nao encontrada na area"); A
                     } else {
-                        JOptionPane.showMessageDialog(null, "" + areaLiterais.AL[a], "Informação", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "" + this.instructionliteralarea.AL[a], "Informação", JOptionPane.INFORMATION_MESSAGE);
                         //System.out.println(AL.AL[a]); A
                         //AL.LIT++;
                     }
