@@ -23,7 +23,7 @@ public class LexicoAnalyzer {
         int i = 0;
 
         input = input + ' ';
-        while (i <input.length()) {
+        while (i < input.length()) {
             //pega o char correspondente a posição na string
             char currentChar = input.charAt(i);
             switch (state) {
@@ -53,7 +53,7 @@ public class LexicoAnalyzer {
                     } else if (".,;)*/+-=$".indexOf(currentChar) != -1) {
                         state = 11;
                     } else {
-                        showError(String.format("Símbolo '" + currentChar + "' não reconhecido. Linha: " + row + ". Coluna: " + col + "."));
+                        throw new LexicoAnalyzerException(String.format("Símbolo '" + currentChar + "' não reconhecido. Linha: " + row + ". Coluna: " + col + "."));
                     }
                     buffer.append(currentChar);
                     i++;
@@ -74,7 +74,7 @@ public class LexicoAnalyzer {
                                 symbols.add(new Symbol(Constants.t_IDENT, buffer.toString(), "Identificador", row, col));
                                 resetBuffer();
                             } else {
-                                showError(String.format("Identificador com " + string.length() + " caracteres. Tamanho máximo permitido é 30 caracteres. Linha: " + row + ". Coluna: " + col + "."));
+                                throw new LexicoAnalyzerException(String.format("Identificador com " + string.length() + " caracteres. Tamanho máximo permitido é 30 caracteres. Linha: " + row + ". Coluna: " + col + "."));
                             }
                         }
                     }
@@ -91,7 +91,7 @@ public class LexicoAnalyzer {
                             symbols.add(new Symbol(Constants.t_INTEIRO, string, "Inteiro", row, col));
                             resetBuffer();
                         } else {
-                            showError(String.format("Número inteiro " + string + " fora da escala. Máximo permitido é 32767 para inteiro. Linha: " + row + ". Coluna: " + col + "."));
+                            throw new LexicoAnalyzerException(String.format("Número inteiro " + string + " fora da escala. Máximo permitido é 32767 para inteiro. Linha: " + row + ". Coluna: " + col + "."));
                         }
                     }
                     break;
@@ -112,7 +112,7 @@ public class LexicoAnalyzer {
                         symbols.add(new Symbol(Constants.t_LITERAL, string, "Literal", row, col));
                         resetBuffer();
                     } else {
-                        showError(String.format("Literal com " + string.length() + " caracteres. Tamanho máximo permitido é 255 caracteres. Linha: " + row + ". Coluna: " + col + "."));
+                        throw new LexicoAnalyzerException(String.format("Literal com " + string.length() + " caracteres. Tamanho máximo permitido é 255 caracteres. Linha: " + row + ". Coluna: " + col + "."));
                     }
                     break;
 
@@ -197,25 +197,25 @@ public class LexicoAnalyzer {
         resetBuffer();
     }
 
-    private void showError(String message) throws Exception {
-        Main.generateTableResults(symbols);
-        throw new Exception(String.format(message));
-    }
     //checa se o caractere atual faz parte dos ignorados
     private boolean isIgnoredChar(char character) {
         return character == ' ' || character == '\t' || character == '\n' || character == '\r';
     }
+
     //checa se o caractere atual é uma das letras que está na variavel letters
     private boolean isAlphabet(char character) {
         return letters.contains(String.valueOf(character));
     }
+
     //checa se o caractere atual é um dos números que está na variável de referência dos números
     private boolean isNumber(char character) {
         return numbers.contains(String.valueOf(character));
     }
+
     private boolean isDoubleQuotes(char character) {
         return character == '"';
     }
+
     private boolean isNewLine(char character) {
         return character == '\n';
     }
