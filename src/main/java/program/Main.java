@@ -3,7 +3,6 @@ package program;
 import lexicoAnalyzer.LexicoAnalyzer;
 import lexicoAnalyzer.Symbol;
 import syntacticAnalyzer.SyntacticAnalyzer;
-import syntacticAnalyzer.SyntacticAnalyzerException;
 
 import java.awt.Container;
 import java.awt.Font;
@@ -16,31 +15,34 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class Main extends JFrame {
-    private static DefaultTableModel model;
 
-    private static JTable table;
-    private TextArea textArea;
+    private DefaultTableModel tokenModel = new DefaultTableModel();
+
+    private DefaultTableModel symbolTableModel = new DefaultTableModel();
+
+    private JTable tokenTable;
+
+    private JTable symbolTable;
+
+    private TextArea consoleTextArea = new TextArea();
+
     private JScrollPane scrollPane;
 
+
     public Main() {
-        //definição da tela
+
         setTitle("Syntatic Analizer");
         setResizable(true);
         this.setExtendedState( this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
         this.setLocation(((Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 320) - (this.getWidth() / 2)),
                 ((Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 280) - (this.getHeight() / 2)));
-        model = new DefaultTableModel();
-        model.addColumn("Id");
-        model.addColumn("Token");
-        model.addColumn("Description");
 
-        table = new JTable(model);
+        createTokenTable();
 
         JLabel labelInput = new JLabel("Input:");
         labelInput.setFont(new Font("Arial Black", Font.BOLD, 14));
@@ -51,9 +53,66 @@ public class Main extends JFrame {
         textAreaError.setBounds(10, 550, 500, 300);
         getContentPane().add(textAreaError);
 
-        textArea = new TextArea();
-        textArea.setBounds(10, 33, 500, 500);
-        textArea.setText("Program ProgramaTrabalho3;\n" +
+        createConsoleTextArea();
+
+        Container container = getContentPane();
+        getContentPane().setLayout(null);
+        container.add(scrollPane);
+
+        JButton analyserButton = new JButton("Analize");
+        analyserButton.addActionListener(new ActionListener() {
+
+            //ação ao clica no botão
+            public void actionPerformed(ActionEvent e) {
+                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
+                //atribui toda caixa de texto para uma string
+                String entrada = consoleTextArea.getText() + "";
+
+                try {
+                    //analisa a entrada com o analizador léxico, convertendo em uma lista de simbolos
+                    List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
+                    //plota os simbolos na tabela gráfica
+                    generateTableResults(symbols);
+                    //analisa os simbolos retornados pelo lexico com analisador sintatico
+                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+                    syntacticAnalyzer.analyse(symbols);
+                    //se não houver nenhum erro, exibe a mensagem de conclusao
+                    textAreaError.setText("Finished");
+                } catch (Exception ex) {
+                    textAreaError.setText(ex.getMessage());
+                }
+
+
+            }
+
+        });
+        analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
+        analyserButton.setBounds(550, 550, 215, 47);
+        getContentPane().add(analyserButton);
+
+        JButton buttonLimpar = new JButton("Clean");
+        buttonLimpar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                cleanTokenTable();
+            }
+        });
+        buttonLimpar.setFont(new Font("Arial Black", Font.BOLD, 14));
+        buttonLimpar.setBounds(800, 550, 215, 47);
+        getContentPane().add(buttonLimpar);
+
+        JLabel labelResultado = new JLabel("Result:");
+        labelResultado.setFont(new Font("Arial Black", Font.BOLD, 14));
+        labelResultado.setBounds(344, 12, 91, 14);
+        getContentPane().add(labelResultado);
+
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(800, 465);
+        setVisible(true);
+    }
+
+    private void createConsoleTextArea() {
+        consoleTextArea.setBounds(10, 33, 500, 500);
+        consoleTextArea.setText("Program ProgramaTrabalho3;\n" +
                 "Const max_nums = 5;\n" +
                 "Var x,res,cont,soma: Integer;\n" +
                 "Procedure calcula(y: integer);\n" +
@@ -80,84 +139,40 @@ public class Main extends JFrame {
                 " end;\n" +
                 " Writeln(\"Resultado da soma dos cálculos: \", soma);\n" +
                 "End.");
-        getContentPane().add(textArea);
+        getContentPane().add(consoleTextArea);
+    }
 
-        Container container = getContentPane();
-        getContentPane().setLayout(null);
-        scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(textArea.getWidth() + 50, 32, 500, 500);
-        container.add(scrollPane);
+    private void createTokenTable() {
+        tokenModel.addColumn("Id");
+        tokenModel.addColumn("Token");
+        tokenModel.addColumn("Description");
+        tokenTable = new JTable(tokenModel);
+        scrollPane = new JScrollPane(tokenTable);
+        scrollPane.setBounds(consoleTextArea.getWidth() + 50, 32, 500, 500);
+    }
 
-        JButton analyserButton = new JButton("Analize");
-        analyserButton.addActionListener(new ActionListener() {
-
-            //ação ao clica no botão
-            public void actionPerformed(ActionEvent e) {
-                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
-                //atribui toda caixa de texto para uma string
-                String entrada = textArea.getText() + "";
-
-                try {
-                    //analisa a entrada com o analizador léxico, convertendo em uma lista de simbolos
-                    List<Symbol> symbols = lexicoAnalyzer.analyze(entrada);
-                    //plota os simbolos na tabela gráfica
-                    generateTableResults(symbols);
-                    //analisa os simbolos retornados pelo lexico com analisador sintatico
-                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
-                    syntacticAnalyzer.analyse(symbols);
-                    //se não houver nenhum erro, exibe a mensagem de conclusao
-                    textAreaError.setText("Finished");
-                } catch (SyntacticAnalyzerException ex) {
-                    textAreaError.setText("Error: " + ex.getMessage());
-                } catch (Exception ex) {
-                    textAreaError.setText("Error: " + ex.getMessage());
-                }
-
-
-            }
-
-        });
-        analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
-        analyserButton.setBounds(550, 550, 215, 47);
-        getContentPane().add(analyserButton);
-
-        JButton buttonLimpar = new JButton("Clean");
-        buttonLimpar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                cleanTable();
-            }
-        });
-        buttonLimpar.setFont(new Font("Arial Black", Font.BOLD, 14));
-        buttonLimpar.setBounds(800, 550, 215, 47);
-        getContentPane().add(buttonLimpar);
-
-        JLabel labelResultado = new JLabel("Result:");
-        labelResultado.setFont(new Font("Arial Black", Font.BOLD, 14));
-        labelResultado.setBounds(344, 12, 91, 14);
-        getContentPane().add(labelResultado);
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800, 465);
-        setVisible(true);
-//        analyserButton.doClick();
+    private void createSymbolTable() {
+        symbolTableModel.addColumn("Id");
+        symbolTableModel.addColumn("Token");
+        symbolTableModel.addColumn("Description");
+        symbolTable = new JTable(symbolTableModel);
     }
 
     public static void main(String args[]) {
         new Main();
     }
 
-    //metodo que limpa a tabela gráfica
-    public static void cleanTable() {
-        while (table.getRowCount() > 0) {
-            model.removeRow(0);
+    public void cleanTokenTable() {
+        while (tokenTable.getRowCount() > 0) {
+            tokenModel.removeRow(0);
         }
     }
 
     //metodo que plota os simbolos na tabela gráfica
-    public static void generateTableResults(List<Symbol> symbols) {
-        cleanTable();
+    public void generateTableResults(List<Symbol> symbols) {
+        cleanTokenTable();
         for (Symbol symbol : symbols) {
-            model.addRow(new String[]{String.valueOf(symbol.getId()), symbol.getToken(), symbol.getDescription()});
+            tokenModel.addRow(new String[]{String.valueOf(symbol.getId()), symbol.getToken(), symbol.getDescription()});
         }
     }
 }
