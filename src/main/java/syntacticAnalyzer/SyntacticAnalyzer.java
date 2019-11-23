@@ -11,6 +11,8 @@ import java.util.Stack;
 
 public class SyntacticAnalyzer {
 
+    public SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
+
     public void analyse(List<Symbol> symbols) throws SyntacticAnalyzerException, SymbolNotFoundException, SymbolDeclaredException, SemanticException {
 
         Symbol currentToken = new Symbol();
@@ -24,8 +26,6 @@ public class SyntacticAnalyzer {
         for (int i = symbols.size() - 1; i >= 0; i--) {
             inputSymbols.add(symbols.get(i));
         }
-
-        SemanticAnalyzer semanticAnalyzer = new SemanticAnalyzer();
 
         do {
             //tira do topo da pilha de simbolos sentaças vazias
@@ -78,7 +78,6 @@ public class SyntacticAnalyzer {
                 throw new SyntacticAnalyzerException(error(currentAuxToken, currentToken));
             }
         } while (!auxStack.empty());
-//        semanticAnalyzer.hipotetica.Interpreta();
     }
 
     //testa se o token é terminal ou não (id do token < primeiro não terminal

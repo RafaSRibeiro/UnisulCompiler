@@ -42,7 +42,7 @@ public class Main extends JFrame {
     private List<Symbol> symbols;
 
     public Main() {
-
+        container.setLayout(null);
         setTitle("Syntatic Analizer");
         setResizable(true);
         this.setExtendedState( this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
@@ -51,30 +51,10 @@ public class Main extends JFrame {
 
         mountScreen();
 
-
-        textAreaError.setBounds(10, 550, 500, 300);
-        container.add(textAreaError);
-        container.setLayout(null);
-
-        JButton buttonLimpar = new JButton("Clean");
-        buttonLimpar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                cleanTokenTable();
-                cleanSymbolTable();
-            }
-        });
-        buttonLimpar.setFont(new Font("Arial Black", Font.BOLD, 14));
-        buttonLimpar.setBounds(800, 550, 215, 47);
-        container.add(buttonLimpar);
-
-        JLabel labelResultado = new JLabel("Result:");
-        labelResultado.setFont(new Font("Arial Black", Font.BOLD, 14));
-        labelResultado.setBounds(344, 12, 91, 14);
-        container.add(labelResultado);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(800, 465);
         setVisible(true);
+
     }
 
     private void createConsoleTextArea() {
@@ -113,6 +93,9 @@ public class Main extends JFrame {
                 " Writeln(\"Resultado da soma dos cálculos: \", soma);\n" +
                 "End.");
         container.add(consoleTextArea);
+
+        textAreaError.setBounds(10, 550, 500, 300);
+        container.add(textAreaError);
     }
 
     private void mountScreen() {
@@ -121,6 +104,8 @@ public class Main extends JFrame {
         createSymbolTable();
         createLexicoAnalyzeButton();
         createSyntacticAnalyzeButton();
+        createButtonClean();
+        createExecuteButton();
     }
 
     private void createTokenTable() {
@@ -132,6 +117,11 @@ public class Main extends JFrame {
         tokenScrollPane = new JScrollPane(tokenTable);
         tokenScrollPane.setBounds(consoleTextArea.getX() + consoleTextArea.getWidth() + 20, 32, 350, 500);
         container.add(tokenScrollPane);
+
+        JLabel labelResultado = new JLabel("Result:");
+        labelResultado.setFont(new Font("Arial Black", Font.BOLD, 14));
+        labelResultado.setBounds(consoleTextArea.getX() - 10, 12, 91, 14);
+        container.add(labelResultado);
     }
 
     private void createSymbolTable() {
@@ -163,8 +153,6 @@ public class Main extends JFrame {
                 } catch (Exception ex) {
                     textAreaError.setText(ex.getMessage());
                 }
-
-
             }
 
         });
@@ -199,6 +187,48 @@ public class Main extends JFrame {
         analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
         analyserButton.setBounds(550, 650, 215, 47);
         container.add(analyserButton);
+    }
+
+    private void createExecuteButton() {
+        JButton analyserButton = new JButton("Execute Program");
+        analyserButton.addActionListener(new ActionListener() {
+
+            //ação ao clica no botão
+            public void actionPerformed(ActionEvent e) {
+                LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
+                String entrada = consoleTextArea.getText() + "";
+
+                try {
+                    symbols = lexicoAnalyzer.analyze(entrada);
+                    generateTableResults(symbols);
+                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+                    syntacticAnalyzer.analyse(symbols);
+                    syntacticAnalyzer.semanticAnalyzer.hipotetica.Interpreta();
+                    textAreaError.setText("Executed Finished");
+                } catch (Exception ex) {
+                    textAreaError.setText(ex.getMessage());
+                }
+
+
+            }
+
+        });
+        analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
+        analyserButton.setBounds(550, 750, 215, 47);
+        container.add(analyserButton);
+    }
+
+    private void createButtonClean() {
+        JButton buttonLimpar = new JButton("Clean");
+        buttonLimpar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                cleanTokenTable();
+                cleanSymbolTable();
+            }
+        });
+        buttonLimpar.setFont(new Font("Arial Black", Font.BOLD, 14));
+        buttonLimpar.setBounds(800, 550, 215, 47);
+        container.add(buttonLimpar);
     }
 
     public static void main(String args[]) {
