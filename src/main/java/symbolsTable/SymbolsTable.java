@@ -6,7 +6,7 @@ public class SymbolsTable {
 
     private final int tableSize = 25147; //first prime after 25143
 
-    Symbol[] hashtable = new Symbol[tableSize];
+    public Symbol[] hashtable = new Symbol[tableSize];
 
     public SymbolsTable() {
         inithashTable();

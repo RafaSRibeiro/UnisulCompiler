@@ -16,7 +16,7 @@ public class SemanticAnalyzer {
 
     private Stack conditionStack;
 
-    private SymbolsTable symbolsTable;
+    public SymbolsTable symbolsTable;
 
     private int actualLevel;
 

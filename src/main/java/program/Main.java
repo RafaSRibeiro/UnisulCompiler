@@ -207,6 +207,7 @@ public class Main extends JFrame {
                     generateSymbolTableResults(symbols);
 
                     syntacticAnalyzer.analyse(symbols);
+                    generateSymbolTableResults(syntacticAnalyzer.semanticAnalyzer.symbolsTable.hashtable);
                     generateInstructionTableResults(syntacticAnalyzer.semanticAnalyzer.hipotetica.getInstructions());
 
                     textAreaError.setText("Syntactic Analize Finished");
@@ -285,7 +286,7 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 cleanTokenTable();
                 cleanSymbolTable();
-                cleaninstructionTable();
+                cleanInstructionTable();
             }
         });
         buttonLimpar.setFont(new Font("Arial Black", Font.BOLD, 14));
@@ -305,7 +306,7 @@ public class Main extends JFrame {
         }
     }
 
-    private void cleaninstructionTable() {
+    private void cleanInstructionTable() {
         while (instructionTable.getRowCount() > 0) {
             instructionTableModel.removeRow(0);
         }
@@ -319,13 +320,19 @@ public class Main extends JFrame {
     }
 
     private void generateInstructionTableResults(Instruction[] instructions) {
-        cleaninstructionTable();
+        cleanInstructionTable();
         for (Instruction instruction : instructions) {
             instructionTableModel.addRow(new String[]{String.valueOf(instruction.getNomeCodigo()), String.valueOf(instruction.op1), String.valueOf(instruction.op2)});
         }
     }
 
-
+    private void generateSymbolTableResults(symbolsTable.Symbol[] symbols) {
+        cleanSymbolTable();
+        for (symbolsTable.Symbol symbol : symbols) {
+            if (symbol != null)
+                symbolTableModel.addRow(new String[]{symbol.name, String.valueOf(symbol.category), String.valueOf(symbol.level), String.valueOf(symbol.generalA), String.valueOf(symbol.generalB)});
+        }
+    }
 
 
 }
