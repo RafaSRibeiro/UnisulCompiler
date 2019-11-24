@@ -1,5 +1,6 @@
 package program;
 
+import hypotheticalMachine.Instruction;
 import lexicoAnalyzer.LexicoAnalyzer;
 import lexicoAnalyzer.Symbol;
 import syntacticAnalyzer.SyntacticAnalyzer;
@@ -13,7 +14,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class Main extends JFrame {
@@ -22,9 +22,13 @@ public class Main extends JFrame {
 
     private DefaultTableModel symbolTableModel = new DefaultTableModel();
 
+    private DefaultTableModel instructionTableModel = new DefaultTableModel();
+
     private JTable tokenTable;
 
     private JTable symbolTable;
+
+    private JTable instructionTable;
 
     private TextArea consoleTextArea = new TextArea();
 
@@ -32,17 +36,26 @@ public class Main extends JFrame {
 
     private JScrollPane symbolTableScrollPane;
 
+    private JScrollPane instructionTableScrollPane;
+
     private Container container = getContentPane();
 
     private TextArea textAreaError = new TextArea();
 
     private List<Symbol> symbols;
 
+    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+
+    public static void main(String args[]) {
+        new Main();
+
+    }
+
     public Main() {
         container.setLayout(null);
         setTitle("Syntatic Analizer");
         setResizable(true);
-        this.setExtendedState( this.getExtendedState()|JFrame.MAXIMIZED_BOTH );
+        this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         this.setLocation(((Toolkit.getDefaultToolkit().getScreenSize().width / 2 - 320) - (this.getWidth() / 2)),
                 ((Toolkit.getDefaultToolkit().getScreenSize().height / 2 - 280) - (this.getHeight() / 2)));
 
@@ -99,6 +112,7 @@ public class Main extends JFrame {
         createConsoleTextArea();
         createTokenTable();
         createSymbolTable();
+        createInstructionTable();
         createLexicoAnalyzeButton();
         createSyntacticAnalyzeButton();
         createButtonClean();
@@ -116,10 +130,10 @@ public class Main extends JFrame {
         tokenScrollPane.setBounds(consoleTextArea.getX() + consoleTextArea.getWidth() + 20, 32, 350, 500);
         container.add(tokenScrollPane);
 
-        JLabel labelResultado = new JLabel("Result:");
-        labelResultado.setFont(new Font("Arial Black", Font.BOLD, 14));
-        labelResultado.setBounds(consoleTextArea.getX() - 10, 12, 91, 14);
-        container.add(labelResultado);
+        JLabel lable = new JLabel("Token Table:");
+        lable.setFont(new Font("Arial Black", Font.BOLD, 14));
+        lable.setBounds(tokenScrollPane.getX(), 10, tokenScrollPane.getWidth(), 14);
+        container.add(lable);
     }
 
     private void createSymbolTable() {
@@ -133,6 +147,26 @@ public class Main extends JFrame {
         symbolTableScrollPane = new JScrollPane(symbolTable);
         symbolTableScrollPane.setBounds(tokenScrollPane.getX() + tokenScrollPane.getWidth() + 20, 32, 500, 500);
         container.add(symbolTableScrollPane);
+
+        JLabel label = new JLabel("Symbols Table:");
+        label.setFont(new Font("Arial Black", Font.BOLD, 14));
+        label.setBounds(symbolTableScrollPane.getX(), 10, symbolTableScrollPane.getWidth(), 14);
+        container.add(label);
+    }
+
+    private void createInstructionTable() {
+        instructionTableModel.addColumn("Command");
+        instructionTableModel.addColumn("Q1");
+        instructionTableModel.addColumn("Q2");
+        instructionTable = new JTable(instructionTableModel);
+        instructionTableScrollPane = new JScrollPane(instructionTable);
+        instructionTableScrollPane.setBounds(symbolTableScrollPane.getX() + symbolTableScrollPane.getWidth() + 20, 32, 300, 500);
+        container.add(instructionTableScrollPane);
+
+        JLabel label = new JLabel("Instruction Table:");
+        label.setFont(new Font("Arial Black", Font.BOLD, 14));
+        label.setBounds(instructionTableScrollPane.getX(), 10, instructionTableScrollPane.getWidth(), 14);
+        container.add(label);
     }
 
     private void createLexicoAnalyzeButton() {
@@ -146,7 +180,7 @@ public class Main extends JFrame {
 
                 try {
                     symbols = lexicoAnalyzer.analyze(entrada);
-                    generateTableResults(symbols);
+                    generateSymbolTableResults(symbols);
                     textAreaError.setText("Lexico Analize Finished");
                 } catch (Exception ex) {
                     textAreaError.setText(ex.getMessage());
@@ -170,9 +204,11 @@ public class Main extends JFrame {
 
                 try {
                     symbols = lexicoAnalyzer.analyze(entrada);
-                    generateTableResults(symbols);
-                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+                    generateSymbolTableResults(symbols);
+
                     syntacticAnalyzer.analyse(symbols);
+                    generateInstructionTableResults(syntacticAnalyzer.semanticAnalyzer.hipotetica.getInstructions());
+
                     textAreaError.setText("Syntactic Analize Finished");
                 } catch (Exception ex) {
                     textAreaError.setText(ex.getMessage());
@@ -198,8 +234,8 @@ public class Main extends JFrame {
 
                 try {
                     symbols = lexicoAnalyzer.analyze(entrada);
-                    generateTableResults(symbols);
-                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
+                    generateSymbolTableResults(symbols);
+
                     syntacticAnalyzer.analyse(symbols);
                     syntacticAnalyzer.semanticAnalyzer.hipotetica.Interpreta();
                     textAreaError.setText("Executed Finished");
@@ -220,16 +256,13 @@ public class Main extends JFrame {
         JButton analyserButton = new JButton("Open File");
         analyserButton.addActionListener(new ActionListener() {
 
-            //ação ao clica no botão
             public void actionPerformed(ActionEvent e) {
                 LexicoAnalyzer lexicoAnalyzer = new LexicoAnalyzer();
-                String entrada = consoleTextArea.getText() + "";
-
                 try {
-                    FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
+                    FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
                     dialog.setMode(FileDialog.LOAD);
                     dialog.setVisible(true);
-                    String file = dialog.getFile();
+                    String file = dialog.getDirectory() + dialog.getFile();
                     String fileString = new String(Files.readAllBytes(Paths.get(file)), StandardCharsets.UTF_8);
                     consoleTextArea.setText(fileString);
                     textAreaError.setText("Load Finished");
@@ -252,6 +285,7 @@ public class Main extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 cleanTokenTable();
                 cleanSymbolTable();
+                cleaninstructionTable();
             }
         });
         buttonLimpar.setFont(new Font("Arial Black", Font.BOLD, 14));
@@ -259,28 +293,39 @@ public class Main extends JFrame {
         container.add(buttonLimpar);
     }
 
-    public static void main(String args[]) {
-        new Main();
-    }
-
-    public void cleanTokenTable() {
+    private void cleanTokenTable() {
         while (tokenTable.getRowCount() > 0) {
             tokenModel.removeRow(0);
         }
     }
 
-    public void cleanSymbolTable() {
+    private void cleanSymbolTable() {
         while (symbolTable.getRowCount() > 0) {
             symbolTableModel.removeRow(0);
         }
     }
 
-    //metodo que plota os simbolos na tabela gráfica
-    public void generateTableResults(List<Symbol> symbols) {
+    private void cleaninstructionTable() {
+        while (instructionTable.getRowCount() > 0) {
+            instructionTableModel.removeRow(0);
+        }
+    }
+
+    private void generateSymbolTableResults(List<Symbol> symbols) {
         cleanTokenTable();
-        cleanSymbolTable();
         for (Symbol symbol : symbols) {
             tokenModel.addRow(new String[]{String.valueOf(symbol.getId()), symbol.getToken(), symbol.getDescription()});
         }
     }
+
+    private void generateInstructionTableResults(Instruction[] instructions) {
+        cleaninstructionTable();
+        for (Instruction instruction : instructions) {
+            instructionTableModel.addRow(new String[]{String.valueOf(instruction.getNomeCodigo()), String.valueOf(instruction.op1), String.valueOf(instruction.op2)});
+        }
+    }
+
+
+
+
 }

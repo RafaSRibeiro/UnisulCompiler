@@ -369,6 +369,10 @@ public class Hipotetica {
         }
         return aux;
     }
+
+    public Instruction[] getInstructions() {
+        return this.intructionArea.instructions;
+    }
 }
 
 
