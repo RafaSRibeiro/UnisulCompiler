@@ -155,6 +155,7 @@ public class Main extends JFrame {
     }
 
     private void createInstructionTable() {
+        instructionTableModel.addColumn("id");
         instructionTableModel.addColumn("Command");
         instructionTableModel.addColumn("Q1");
         instructionTableModel.addColumn("Q2");
@@ -321,8 +322,10 @@ public class Main extends JFrame {
 
     private void generateInstructionTableResults(Instruction[] instructions) {
         cleanInstructionTable();
+        int index = 0;
         for (Instruction instruction : instructions) {
-            instructionTableModel.addRow(new String[]{String.valueOf(instruction.getNomeCodigo()), String.valueOf(instruction.op1), String.valueOf(instruction.op2)});
+            instructionTableModel.addRow(new String[]{String.valueOf(index), String.valueOf(instruction.getNomeCodigo()), String.valueOf(instruction.op1), String.valueOf(instruction.op2)});
+            index++;
         }
     }
 
