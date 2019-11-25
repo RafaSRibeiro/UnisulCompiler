@@ -44,8 +44,6 @@ public class Main extends JFrame {
 
     private List<Symbol> symbols;
 
-    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
-
     public static void main(String args[]) {
         new Main();
 
@@ -207,6 +205,7 @@ public class Main extends JFrame {
                     symbols = lexicoAnalyzer.analyze(entrada);
                     generateSymbolTableResults(symbols);
 
+                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
                     syntacticAnalyzer.analyse(symbols);
                     generateSymbolTableResults(syntacticAnalyzer.semanticAnalyzer.symbolsTable.hashtable);
                     generateInstructionTableResults(syntacticAnalyzer.semanticAnalyzer.hipotetica.getInstructions());
@@ -238,7 +237,11 @@ public class Main extends JFrame {
                     symbols = lexicoAnalyzer.analyze(entrada);
                     generateSymbolTableResults(symbols);
 
+                    SyntacticAnalyzer syntacticAnalyzer = new SyntacticAnalyzer();
                     syntacticAnalyzer.analyse(symbols);
+                    generateSymbolTableResults(syntacticAnalyzer.semanticAnalyzer.symbolsTable.hashtable);
+                    generateInstructionTableResults(syntacticAnalyzer.semanticAnalyzer.hipotetica.getInstructions());
+
                     syntacticAnalyzer.semanticAnalyzer.hipotetica.Interpreta();
                     textAreaError.setText("Executed Finished");
                 } catch (Exception ex) {

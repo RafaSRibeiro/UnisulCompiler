@@ -240,7 +240,7 @@ public class SemanticAnalyzer {
     }
 
     private void action155() {
-        hipotetica.addInstruction(InstructionArea.NEGA,-1,-1);
+        hipotetica.addInstruction(InstructionArea.NEGA, -1, -1);
     }
 
     private void action154() {
@@ -248,7 +248,7 @@ public class SemanticAnalyzer {
     }
 
     private void action153() {
-        hipotetica.addInstruction(InstructionArea.CONJ,-1,-1);
+        hipotetica.addInstruction(InstructionArea.CONJ, -1, -1);
     }
 
     private void action152() {
@@ -305,7 +305,7 @@ public class SemanticAnalyzer {
         hipotetica.addInstruction(InstructionArea.CRVL, currentForIdentifier.level, currentForIdentifier.generalA);
 
         // gera instrução CRCT (1) base 10
-        hipotetica.addInstruction(InstructionArea.CRCT, -1,1);
+        hipotetica.addInstruction(InstructionArea.CRCT, -1, 1);
 
         // gera instrução soma (até aqui incrementa variável de controle)
         hipotetica.addInstruction(InstructionArea.SOMA, -1, -1);
@@ -388,8 +388,15 @@ public class SemanticAnalyzer {
         hipotetica.addInstruction(InstructionArea.CRCT, 0, Integer.parseInt(getTokenAnterior().getToken()));
         //   gera instrução CMIG
         hipotetica.addInstruction(InstructionArea.CMIG, -1, -1);
-        //todo   resolve, se houver pendência, instruções de desvio (DSVT) utilizando endereços salvos na pilha de controle, colocando como operando (LC+1)
-
+        //   resolve, se houver pendência, instruções de desvio (DSVT) utilizando endereços salvos na pilha de controle, colocando como operando (LC+1)
+        if (!caseControlStack.empty()) {
+            for (int i = 0; i < caseControlStack.size(); i++) {
+                if (hipotetica.intructionArea.instructions[caseControlStack.get(i)].codigo == InstructionArea.DSVT) {
+                    hipotetica.alterInstruction(caseControlStack.pop(), -1, hipotetica.intructionArea.LC + 1);
+                    i = 0;
+                }
+            }
+        }
         //  gera instrução DSVF, guardando endereço do operando ou da instrução na pilha de controle dos CASE´s.
         hipotetica.addInstruction(InstructionArea.DSVF, -1, -1);
         caseControlStack.add(hipotetica.intructionArea.LC - 1);
@@ -397,8 +404,13 @@ public class SemanticAnalyzer {
 
     private void action133() {
         //   completa instruções de desvio (DSVS), relativas ao CASE em questão, com LC, utilizando endereços salvos na pilha de controle
-        int casePosition = caseControlStack.pop();
-        hipotetica.alterInstruction(casePosition, 0, hipotetica.intructionArea.LC);
+        while (!caseControlStack.empty()) {
+            int caseControl = caseControlStack.pop();
+            if (hipotetica.intructionArea.instructions[caseControl].codigo == InstructionArea.DSVS) {
+                hipotetica.alterInstruction(caseControl, 0, hipotetica.intructionArea.LC);
+            }
+        }
+
         //   gera instrução AMEN -, -1 (limpeza)
         hipotetica.addInstruction(InstructionArea.AMEM, -1, -1);
     }
@@ -409,7 +421,7 @@ public class SemanticAnalyzer {
     }
 
     private void action131() {
-        hipotetica.addInstruction(InstructionArea.IMPR,-1,-1);
+        hipotetica.addInstruction(InstructionArea.IMPR, -1, -1);
     }
 
     private void action130() {
@@ -418,27 +430,27 @@ public class SemanticAnalyzer {
     }
 
     private void action129() throws SymbolNotFoundException, SemanticException {
-            Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
-            switch (this.context) {
-                case CONTEXT_READLN:
-                    if (symbol.category == Symbol.VARIAVEL) {
-                        this.hipotetica.addInstruction(InstructionArea.LEIT, -1, -1);
-                        this.hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - symbol.level, symbol.generalA);
-                    } else {
-                        throw new SemanticException("ERRO 129: Símbolo não é uma variável");
-                    }
-                    break;
-                case CONTEXT_EXPRESSAO:
-                    if (symbol.category == Symbol.PROCEDURE) {
-                        throw new SemanticException("ERRO 129: Símbolo é uma procedure");
-                    }
-                    if (symbol.category == Symbol.CONSTANTE) {
-                        this.hipotetica.addInstruction(InstructionArea.CRCT, 0, symbol.generalA);
-                    } else {
-                        this.hipotetica.addInstruction(InstructionArea.CRVL, actualLevel - symbol.level, symbol.generalA);
-                    }
-                    break;
-            }
+        Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+        switch (this.context) {
+            case CONTEXT_READLN:
+                if (symbol.category == Symbol.VARIAVEL) {
+                    this.hipotetica.addInstruction(InstructionArea.LEIT, -1, -1);
+                    this.hipotetica.addInstruction(InstructionArea.ARMZ, actualLevel - symbol.level, symbol.generalA);
+                } else {
+                    throw new SemanticException("ERRO 129: Símbolo não é uma variável");
+                }
+                break;
+            case CONTEXT_EXPRESSAO:
+                if (symbol.category == Symbol.PROCEDURE) {
+                    throw new SemanticException("ERRO 129: Símbolo é uma procedure");
+                }
+                if (symbol.category == Symbol.CONSTANTE) {
+                    this.hipotetica.addInstruction(InstructionArea.CRCT, 0, symbol.generalA);
+                } else {
+                    this.hipotetica.addInstruction(InstructionArea.CRVL, actualLevel - symbol.level, symbol.generalA);
+                }
+                break;
+        }
     }
 
     private void action128() {
@@ -478,7 +490,7 @@ public class SemanticAnalyzer {
 
 
         //   gera instrução DSVS, com operando desconhecido, salvando seu endereço na pilha dos IF’s para posterior marcação
-        this.hipotetica.addInstruction(InstructionArea.DSVS, 0,0);
+        this.hipotetica.addInstruction(InstructionArea.DSVS, 0, 0);
         ifControlStack.add(this.hipotetica.intructionArea.LC - 1);
     }
 
@@ -499,21 +511,21 @@ public class SemanticAnalyzer {
     }
 
     private void action117() throws SemanticException {
-            if (procedure.generalB != effectiveParameterNumber) {
-                throw new SemanticException("ERRO 117: Número de parâmetros diferente de efetivo");
-            } else {
-                hipotetica.addInstruction(InstructionArea.CALL, -1, procedure.generalA);
-                effectiveParameterNumber = 0;
-            }
+        if (procedure.generalB != effectiveParameterNumber) {
+            throw new SemanticException("ERRO 117: Número de parâmetros diferente de efetivo");
+        } else {
+            hipotetica.addInstruction(InstructionArea.CALL, -1, procedure.generalA);
+            effectiveParameterNumber = 0;
+        }
     }
 
     private void action116() throws SemanticException, SymbolNotFoundException {
-            Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
-            if (symbol.category == Symbol.PROCEDURE) {
-                procedure = symbol;
-            } else {
-                throw new SemanticException("ERRO 116: Símbolo não é uma procedure");
-            }
+        Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+        if (symbol.category == Symbol.PROCEDURE) {
+            procedure = symbol;
+        } else {
+            throw new SemanticException("ERRO 116: Símbolo não é uma procedure");
+        }
     }
 
     private void action115() {
@@ -521,12 +533,12 @@ public class SemanticAnalyzer {
     }
 
     private void action114() throws SymbolNotFoundException, SemanticException {
-            Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
-            if (symbol.category == Symbol.VARIAVEL) {
-                leftAssignmentName = symbol;
-            } else {
-                throw new SemanticException("ERRO 114: Símbolo é uma variável");
-            }
+        Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+        if (symbol.category == Symbol.VARIAVEL) {
+            leftAssignmentName = symbol;
+        } else {
+            throw new SemanticException("ERRO 114: Símbolo é uma variável");
+        }
     }
 
     private void action111() {
@@ -565,18 +577,18 @@ public class SemanticAnalyzer {
     }
 
     private void action108() throws SymbolDeclaredException {
-            //  categoria := proc
-            //  inserção
-            Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, hipotetica.intructionArea.LC + 1, -1);
-            symbolsTable.add(newSymbol);
-            actualProcedure = newSymbol;
-            //  houve_parametros := false
-            this.hasParameters = false;
-            //  n_par := 0
-            this.parameterNumber = 0;
-            //  incrementa nível (Nível_atual:= nível_atual + 1)
-            this.actualLevel++;
-            this.shift = 3;
+        //  categoria := proc
+        //  inserção
+        Symbol newSymbol = new Symbol(lastNonTerminalSymbol.getToken(), Symbol.PROCEDURE, this.actualLevel, hipotetica.intructionArea.LC + 1, -1);
+        symbolsTable.add(newSymbol);
+        actualProcedure = newSymbol;
+        //  houve_parametros := false
+        this.hasParameters = false;
+        //  n_par := 0
+        this.parameterNumber = 0;
+        //  incrementa nível (Nível_atual:= nível_atual + 1)
+        this.actualLevel++;
+        this.shift = 3;
     }
 
     private void action100() {
@@ -662,6 +674,6 @@ public class SemanticAnalyzer {
     }
 
     private lexicoAnalyzer.Symbol getTokenAnterior() {
-        return tokens.get(tokens.size()-2);
+        return tokens.get(tokens.size() - 2);
     }
 }
