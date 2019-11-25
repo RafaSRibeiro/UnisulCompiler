@@ -71,7 +71,7 @@ public class Main extends JFrame {
         labelInput.setBounds(10, 10, 73, 14);
         container.add(labelInput);
 
-        consoleTextArea.setBounds(10, 33, 500, 500);
+        consoleTextArea.setBounds(10, 33, 400, 500);
         consoleTextArea.setFont(new Font("Monospaced", 0, 12));
         consoleTextArea.setText("Program ProgramaTrabalho3;\n" +
                 "Const max_nums = 5;\n" +
@@ -102,7 +102,7 @@ public class Main extends JFrame {
                 "End.");
         container.add(consoleTextArea);
 
-        textAreaError.setBounds(10, 550, 500, 300);
+        textAreaError.setBounds(10, 550, 400, 200);
         container.add(textAreaError);
     }
 
@@ -125,7 +125,7 @@ public class Main extends JFrame {
         tokenTable = new JTable(tokenModel);
         tokenTable.getColumnModel().getColumn(0).setMaxWidth(30);
         tokenScrollPane = new JScrollPane(tokenTable);
-        tokenScrollPane.setBounds(consoleTextArea.getX() + consoleTextArea.getWidth() + 20, 32, 350, 500);
+        tokenScrollPane.setBounds(consoleTextArea.getX() + consoleTextArea.getWidth() + 20, 32, 300, 500);
         container.add(tokenScrollPane);
 
         JLabel lable = new JLabel("Token Table:");
@@ -143,7 +143,7 @@ public class Main extends JFrame {
         symbolTable = new JTable(symbolTableModel);
         symbolTable.getColumnModel().getColumn(2).setMaxWidth(40);
         symbolTableScrollPane = new JScrollPane(symbolTable);
-        symbolTableScrollPane.setBounds(tokenScrollPane.getX() + tokenScrollPane.getWidth() + 20, 32, 500, 500);
+        symbolTableScrollPane.setBounds(tokenScrollPane.getX() + tokenScrollPane.getWidth() + 20, 32, 400, 500);
         container.add(symbolTableScrollPane);
 
         JLabel label = new JLabel("Symbols Table:");
@@ -188,7 +188,7 @@ public class Main extends JFrame {
 
         });
         analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
-        analyserButton.setBounds(550, 550, 215, 47);
+        analyserButton.setBounds(consoleTextArea.getX() + consoleTextArea.getWidth() + 20, 550, 215, 47);
         container.add(analyserButton);
     }
 
@@ -220,7 +220,7 @@ public class Main extends JFrame {
 
         });
         analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
-        analyserButton.setBounds(550, 650, 215, 47);
+        analyserButton.setBounds(consoleTextArea.getX() + consoleTextArea.getWidth() + 20, 600, 215, 47);
         container.add(analyserButton);
     }
 
@@ -253,7 +253,7 @@ public class Main extends JFrame {
 
         });
         analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
-        analyserButton.setBounds(550, 750, 215, 47);
+        analyserButton.setBounds(consoleTextArea.getX() + consoleTextArea.getWidth() + 20, 650, 215, 47);
         container.add(analyserButton);
     }
 
@@ -280,7 +280,7 @@ public class Main extends JFrame {
 
         });
         analyserButton.setFont(new Font("Arial Black", Font.BOLD, 14));
-        analyserButton.setBounds(550, 850, 215, 47);
+        analyserButton.setBounds(800, 600, 215, 47);
         container.add(analyserButton);
     }
 
