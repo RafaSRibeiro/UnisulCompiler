@@ -511,7 +511,7 @@ public class SemanticAnalyzer {
     }
 
     private void action117() throws SemanticException {
-        if (procedure.generalB != effectiveParameterNumber) {
+        if (effectiveParameterNumber > 0 && procedure.generalB != effectiveParameterNumber) {
             throw new SemanticException("ERRO 117: Número de parâmetros diferente de efetivo");
         } else {
             hipotetica.addInstruction(InstructionArea.CALL, -1, procedure.generalA);
