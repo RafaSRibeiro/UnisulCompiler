@@ -350,6 +350,7 @@ public class SemanticAnalyzer {
     private void action137() throws SemanticException {
         try {
             Symbol symbol = symbolsTable.findByName(lastNonTerminalSymbol.getToken());
+            lastSymbol = symbol;
             if (symbol.category == Symbol.VARIAVEL) {
                 currentForIdentifier = symbol;
             } else {
@@ -605,7 +606,6 @@ public class SemanticAnalyzer {
         //  Lc:=1 (aponta para a próxima instrução a ser gerada)
         //  Lit := 1 { ponteiro auxiliar para área de literais – n. de ordem}
         this.conditionStack = new Stack();
-        this.symbolsTable = new SymbolsTable();
         this.actualLevel = 0;
         this.freePosition = 1;
         this.variableNumber = 0;
